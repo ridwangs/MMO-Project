@@ -11,7 +11,7 @@ import javafx.scene.transform.Translate
 
 object Background extends JFXApp {
   var lastUpdateTime: Long = System.nanoTime()
-  val windowWidth: Double = 1750
+  val windowWidth: Double = 1600
   val windowHeight: Double = 1000
 
   val characterWidth: Double = 70
@@ -52,12 +52,12 @@ object Background extends JFXApp {
 
   stage = new PrimaryStage {
     title = "Humans VS Zombies"
-  //  fullScreen = true
+   // fullScreen = true
       scene = new Scene(windowWidth, windowHeight) {
         val bg = new Image("view/bg.jpg")
         val view = new ImageView(bg)
-        /*view.setFitHeight(1200)
-        view.setFitWidth(2000)*/
+        view.setFitHeight(1200)
+        view.setFitWidth(2000)
 
         val human = new Image("view/human.png")
         val h = new ImageView(human)
@@ -71,30 +71,37 @@ object Background extends JFXApp {
         }
 
         onMouseMoved = (event: MouseEvent) => {
-          h.setX(event.x - 0.5 * characterWidth)
-          h.setY(event.y - 0.5 * characterHeight)
+          x_=(windowWidth/2-event.x)
+          y_=(windowHeight/2-event.y)
+          h.setX(event.x)// - 0.5 * characterWidth)
+          h.setY(event.y)// - 0.5 * characterHeight)
         }
 
-
+//
         h.setTranslateX(windowWidth/2 - h.getX)
         h.setTranslateY(windowHeight/2 - h.getY)
+
+
 
         val update: Long => Unit = (time: Long) => {
           val dt: Double = (time - lastUpdateTime) / 1000000000.0
           lastUpdateTime = time
 
+//          h.getTranslateX
+//          h.getTranslateY
+//          x_=(h.getX)
+//          y_=(h.getY)
 
 
-          h.setX(h.getTranslateX)
-          h.setY(h.getTranslateY)
-/*
           for (z <- allZombies) {
             var dx = h.getX - z.getX
             var dy = h.getY - z.getY
             var dist = Math.sqrt(dx * dx + dy * dy)
             z.setX(z.getX + dx / dist * zSpeed)
             z.setY(z.getY + dy / dist * zSpeed)
-          }*/
+          }
+
+
         }
 
         content = List(view, h, sceneGraphics)
