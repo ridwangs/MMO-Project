@@ -7,10 +7,11 @@ import scalafx.scene.{Group, Scene}
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.animation.AnimationTimer
+import javafx.scene.transform.Translate
 
 object Background extends JFXApp {
   var lastUpdateTime: Long = System.nanoTime()
-  val windowWidth: Double = 2000
+  val windowWidth: Double = 1750
   val windowHeight: Double = 1000
 
   val characterWidth: Double = 70
@@ -51,46 +52,54 @@ object Background extends JFXApp {
 
   stage = new PrimaryStage {
     title = "Humans VS Zombies"
-    fullScreen = true
-    scene = new Scene(windowWidth, windowHeight) {
-      val bg = new Image("view/bg.jpg")
-      val view = new ImageView(bg)
-      view.setFitHeight(1200)
-      view.setFitWidth(2000)
+  //  fullScreen = true
+      scene = new Scene(windowWidth, windowHeight) {
+        val bg = new Image("view/bg.jpg")
+        val view = new ImageView(bg)
+        /*view.setFitHeight(1200)
+        view.setFitWidth(2000)*/
 
-      val human = new Image("view/human.png")
-      val h = new ImageView(human)
-      h.setFitHeight(characterHeight)
-      h.setFitWidth(characterWidth)
-      h.setX(hLocX)
-      h.setY(hLocY)
+        val human = new Image("view/human.png")
+        val h = new ImageView(human)
+        h.setFitHeight(characterHeight)
+        h.setFitWidth(characterWidth)
+        h.setX(windowWidth/2)
+        h.setY(windowHeight/2)
 
-      onMouseMoved = (event: MouseEvent) => {
-        h.setX(event.x - 0.5 * characterWidth)
-        h.setY(event.y - 0.5 * characterHeight)
-      }
-
-      for (i <- 0 to 4){
-        createZombie(Math.random() * windowWidth, Math.random() * windowHeight)
-      }
-
-      val update: Long => Unit = (time: Long) => {
-        val dt: Double = (time - lastUpdateTime) / 1000000000.0
-        lastUpdateTime = time
-
-        for (z <- allZombies){
-          var dx = h.getX - z.getX
-          var dy = h.getY - z.getY
-          var dist = Math.sqrt(dx*dx+dy*dy)
-          z.setX(z.getX + dx/dist*zSpeed)
-          z.setY(z.getY + dy/dist*zSpeed)
+        for (i <- 0 to 4) {
+          createZombie(Math.random() * windowWidth, Math.random() * windowHeight)
         }
+
+        onMouseMoved = (event: MouseEvent) => {
+          h.setX(event.x - 0.5 * characterWidth)
+          h.setY(event.y - 0.5 * characterHeight)
+        }
+
+
+        h.setTranslateX(windowWidth/2 - h.getX)
+        h.setTranslateY(windowHeight/2 - h.getY)
+
+        val update: Long => Unit = (time: Long) => {
+          val dt: Double = (time - lastUpdateTime) / 1000000000.0
+          lastUpdateTime = time
+
+
+
+          h.setX(h.getTranslateX)
+          h.setY(h.getTranslateY)
+/*
+          for (z <- allZombies) {
+            var dx = h.getX - z.getX
+            var dy = h.getY - z.getY
+            var dist = Math.sqrt(dx * dx + dy * dy)
+            z.setX(z.getX + dx / dist * zSpeed)
+            z.setY(z.getY + dy / dist * zSpeed)
+          }*/
+        }
+
+        content = List(view, h, sceneGraphics)
+        addEventHandler(MouseEvent.MOUSE_CLICKED, (event: MouseEvent) => createZombie(event.getX, event.getY))
+        AnimationTimer(update).start()
       }
-
-      content = List(view,h,sceneGraphics)
-      addEventHandler(MouseEvent.MOUSE_CLICKED, (event: MouseEvent) => createZombie(event.getX, event.getY))
-      AnimationTimer(update).start()
-    }
-
   }
 }
