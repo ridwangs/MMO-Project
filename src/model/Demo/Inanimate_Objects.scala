@@ -1,5 +1,6 @@
 package model.Demo
 
+import javafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 
 abstract class Inanimate_Objects(var health: Int, var damage: Int) extends Object {

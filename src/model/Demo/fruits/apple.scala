@@ -13,6 +13,8 @@ class apple extends Inanimate_Objects(5, 1){
     true
   }
 
+  shape.fill = Color.Red
+
   override def effect(player: Humans): Unit = {
     player.health += this.health
   }
