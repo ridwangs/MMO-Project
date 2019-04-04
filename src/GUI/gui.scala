@@ -7,6 +7,7 @@ import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.{Group, Scene}
 import javafx.scene.input.KeyEvent
+import scalafx.scene.paint.Color
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.shape.Circle
 
@@ -28,6 +29,7 @@ object gui extends JFXApp {
   var rightKeyHeld = false
   var upKeyHeld = false
   var downKeyHeld = false
+  var spaceKeyHeld = false
 
   var timeSpawn = 7.0
   var lastUpdateTime: Long = System.nanoTime()
@@ -82,6 +84,8 @@ object gui extends JFXApp {
     var sumradius = Math.sqrt(xdistance*xdistance + ydistance*ydistance)
     sumradius < circle1.radius.value+circle2.radius.value
   }
+
+
   def stayput(circle1: Circle, circle2: Circle): Unit = {
     val sumradius = circle1.radius.toDouble + circle2.radius.toDouble
     var xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
@@ -97,6 +101,7 @@ object gui extends JFXApp {
       case "S" => downKeyHeld = true
       case "A" => leftKeyHeld = true
       case "D" => rightKeyHeld = true
+      case "Space" => spaceKeyHeld = true
       case _ =>
     }
   }
@@ -107,6 +112,7 @@ object gui extends JFXApp {
       case "S" => downKeyHeld = false
       case "A" => leftKeyHeld = false
       case "D" => rightKeyHeld = false
+      case "Space" => spaceKeyHeld = false
       case _ =>
     }
   }
@@ -119,6 +125,9 @@ object gui extends JFXApp {
       content = List(objects)
       addEventFilter(KeyEvent.KEY_PRESSED, (event: KeyEvent)=> keyPress(event))
       addEventFilter(KeyEvent.KEY_RELEASED, (event: KeyEvent)=> keyRelease(event))
+
+
+
       val update: Long => Unit = (time: Long) => {
         val dt: Double = (time - lastUpdateTime) / 1000000000.0
         lastUpdateTime = time
@@ -127,13 +136,21 @@ object gui extends JFXApp {
           stayput(h1.shape, h2.shape)
         }
 
+        if(collide(h1.shape,h2.shape ) && spaceKeyHeld){
+          var c = List(Color.Red, Color.Green, Color.Purple)
+          h1.shape.fill = c(anyRandom.nextInt(3))
+          if(h1.health < 0){
+            h1.shape.disable() = true
+            h1.shape.visible() = false
+          }
+        }
 
         for(a<- allApple){
           if(collide(h1.shape,a.shape)){
             allApple.remove(allApple.indexOf(a))
             h1.consumeObject(a)
-            a.shape.disable
-            a.shape.visible = false
+            a.shape.disable() = true
+            a.shape.visible() = false
           }
         }
 
@@ -141,8 +158,8 @@ object gui extends JFXApp {
           if(collide(h1.shape,b.shape)){
             h1.consumeObject(b)
             allBanana.remove(allBanana.indexOf(b))
-            b.shape.disable
-            b.shape.visible = false
+            b.shape.disable() = true
+            b.shape.visible() = false
           }
         }
 
