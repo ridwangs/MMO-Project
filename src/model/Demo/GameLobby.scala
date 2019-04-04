@@ -3,7 +3,7 @@ package model.Demo
 import scala.collection.mutable.ListBuffer
 
 object GameLobby {
-//  var aliveHumans: ListBuffer[Humans] = ListBuffer()
+  var aliveHumans: ListBuffer[Humans] = ListBuffer()
 //  var aliveMonster: ListBuffer[Monster] = ListBuffer()
 //  var GameStartTime: Long = System.nanoTime()
 //  var whoWins: String = ""
