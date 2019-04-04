@@ -13,12 +13,7 @@ class Humans extends Animate_Objects (100, 100.0, 10, 5){
 
 
   override def consumeObject(consumedObject: Inanimate_Objects): Unit = {
-    if (consumedObject.canConsume) {
-      this.health = this.health + consumedObject.health
-      if (this.health > 100) {
-        this.health = 100
-      }
-    }
+    consumedObject.effect(this)
   }
 
   override def loseHumanHP(attacker: Animate_Objects): Unit = {

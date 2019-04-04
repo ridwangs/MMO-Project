@@ -16,6 +16,6 @@ abstract class Inanimate_Objects(var health: Int, var damage: Int) extends Objec
 
   }
   var shape = new Circle(){
-    radius = 10.0
+    radius = 7.0
   }
 }

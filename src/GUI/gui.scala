@@ -35,7 +35,7 @@ object gui extends JFXApp {
   val maxWidth = 1920
   val maxheight = 1080
 
-  var timeSpawn = 5.0
+  var timeSpawn = 4.0
   var lastUpdateTime: Long = System.nanoTime()
   var objects = new Group {}
 
@@ -44,6 +44,29 @@ object gui extends JFXApp {
     player.shape.centerY = maxheight / 2
     objects.children.add(player.shape)
     allHumans = allHumans :+ player
+  }
+  def collide(circle1: Circle, circle2: Circle): Boolean = {
+    var xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
+    var ydistance = circle1.centerY.toDouble - circle2.centerY.toDouble
+    var sumradius = Math.pow(xdistance,2) + Math.pow(ydistance,2)
+    if(sumradius < Math.pow(circle1.radius.toDouble + circle2.radius.toDouble,2)){
+      true
+    }
+    else{
+      false
+    }
+  }
+  def stayput(circle1: Circle, circle2: Circle): Unit = {
+    val sumradius = circle1.radius.toDouble + circle2.radius.toDouble
+    var xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
+    var ydistance = circle1.centerY.toDouble - circle2.centerY.toDouble
+    var length = Math.sqrt(Math.pow(xdistance, 2)+ Math.pow(ydistance, 2))
+    circle1.centerX = circle2.centerX.toDouble + sumradius * (xdistance/length)
+    circle1.centerY = circle2.centerY.toDouble + sumradius * (ydistance/length)
+  }
+  def consume(object1: Humans, object2: Inanimate_Objects, list: Group): Unit ={
+    object1.consumeObject(object2)
+    list.getChildren.remove(object2)
   }
 
   def createFruits(x: String): Unit ={
@@ -113,8 +136,9 @@ object gui extends JFXApp {
           }
         }
         for (things <- allFruit){
-          if(collision.collide(allHumans.head.shape, things.shape) == true){
-            collision.stayput(allHumans.head.shape, things.shape)
+          if(collide(allHumans.head.shape, things.shape) == true){
+//            consume(allHumans.head, things ,objects)
+            objects.children.remove(things)
           }
         }
       }
