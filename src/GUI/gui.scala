@@ -38,6 +38,12 @@ object gui extends JFXApp {
     objects.children.add(player.shape)
     allHumans = allHumans :+ player
   }
+  def createComputer(player: Humans): Unit ={
+    player.shape.centerX = maximumWidth*(Math.random())
+    player.shape.centerY = maximumHeight*(Math.random())
+    objects.children.add(player.shape)
+    allHumans = allHumans :+ player
+  }
 
   def createFruits(x: String): Unit ={
     x match {
@@ -66,11 +72,22 @@ object gui extends JFXApp {
   var h1 = new Humans
   createPlayers(h1)
 
+  var h2 = new Humans
+  createComputer(h2)
+
   def collide(circle1: Circle, circle2: Circle): Boolean = {
     var xdistance = circle1.centerX.value - circle2.centerX.value
     var ydistance = circle1.centerY.value - circle2.centerY.value
     var sumradius = Math.sqrt(xdistance*xdistance + ydistance*ydistance)
     sumradius < circle1.radius.value+circle2.radius.value
+  }
+  def stayput(circle1: Circle, circle2: Circle): Unit = {
+    val sumradius = circle1.radius.toDouble + circle2.radius.toDouble
+    var xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
+    var ydistance = circle1.centerY.toDouble - circle2.centerY.toDouble
+    var length = Math.sqrt(Math.pow(xdistance, 2)+ Math.pow(ydistance, 2))
+    circle1.centerX = circle2.centerX.toDouble + sumradius * (xdistance/length)
+    circle1.centerY = circle2.centerY.toDouble + sumradius * (ydistance/length)
   }
 
   def keyPress(event: KeyEvent): Unit = {
@@ -105,11 +122,16 @@ object gui extends JFXApp {
         val dt: Double = (time - lastUpdateTime) / 1000000000.0
         lastUpdateTime = time
 
+        if(collide(h1.shape,h2.shape )){
+          stayput(h1.shape, h2.shape)
+        }
+
+
         for(a<- allApple){
           if(collide(h1.shape,a.shape)){
           //  remF(allApple.,allApple.indexOf(a))
             allApple.remove(allApple.indexOf(a))
-          //  h1.consumeObject(a)
+            h1.consumeObject(a)
             a.shape.disable
             a.shape.visible = false
           }
@@ -117,7 +139,7 @@ object gui extends JFXApp {
 
         for(b<- allBanana){
           if(collide(h1.shape,b.shape)){
-            //  h1.consumeObject(a)
+            h1.consumeObject(b)
             allBanana.remove(allBanana.indexOf(b))
             b.shape.disable
             b.shape.visible = false
@@ -127,17 +149,17 @@ object gui extends JFXApp {
         for(o<- allOrange){
           if(collide(h1.shape,o.shape)){
             allOrange.remove(allOrange.indexOf(o))
-            //  h1.consumeObject(a)
+            h1.consumeObject(o)
             o.shape.disable() = true
             o.shape.visible() = false
           }
         }
 
 
-       if(leftKeyHeld) h1.shape.centerX.value -= h1.speed*0.1
-        if(rightKeyHeld) h1.shape.centerX.value += h1.speed*0.1
-        if(upKeyHeld) h1.shape.centerY.value -= h1.speed*0.1
-        if(downKeyHeld) h1.shape.centerY.value += h1.speed*0.1
+       if(leftKeyHeld) h1.shape.centerX.value -= h1.speed*0.25
+        if(rightKeyHeld) h1.shape.centerX.value += h1.speed*0.25
+        if(upKeyHeld) h1.shape.centerY.value -= h1.speed*0.25
+        if(downKeyHeld) h1.shape.centerY.value += h1.speed*0.25
 
         timeSpawn -= dt
         if (timeSpawn < 0) {
