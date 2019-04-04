@@ -1,27 +1,27 @@
 package GUI
 
 import model.Demo.fruits.{apple, banana, orange}
-
 import model.Demo.Humans
 import scalafx.animation.AnimationTimer
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
-
 import scalafx.scene.{Group, Scene}
-import javafx.scene.input.{KeyCode, KeyEvent}
+import javafx.scene.input.KeyEvent
+import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.shape.Circle
 
+import scala.collection.mutable.ListBuffer
 
 object gui extends JFXApp {
   var anyRandom = scala.util.Random
-  var allApple: List[apple] = List()
+  var allHumans: ListBuffer[Humans] = ListBuffer()
   val fruits: List[String] = List("apple", "banana", "orange")
+  var allApple: ListBuffer[apple] = ListBuffer()
+  var allBanana: ListBuffer[banana] = ListBuffer()
+  var allOrange: ListBuffer[orange] = ListBuffer()
 
-  var allHumans: List[Humans] = List()
-  var allBanana: List[banana] = List()
-  var allOrange: List[orange] = List()
-
-  val maximumWidth = 800
-  val maximumHeight = 600
+  val maximumWidth = 1980
+  val maximumHeight = 1020
 
   var leftKeyHeld = false
   var rightKeyHeld = false
@@ -30,9 +30,9 @@ object gui extends JFXApp {
 
   var timeSpawn = 7.0
   var lastUpdateTime: Long = System.nanoTime()
-  var objects = new Group {}
+  var objects: Group = new Group {}
 
-    def createPlayers(player: Humans): Unit = {
+  def createPlayers(player: Humans): Unit = {
     player.shape.centerX = maximumWidth / 2
     player.shape.centerY = maximumHeight / 2
     objects.children.add(player.shape)
@@ -41,33 +41,37 @@ object gui extends JFXApp {
 
   def createFruits(x: String): Unit ={
     x match {
-      case "apple" => {
-        val apple = new apple
+      case "apple" =>
+        val apple = new apple()
         apple.shape.centerX = maximumWidth*Math.random
         apple.shape.centerY = maximumHeight*Math.random
         objects.children.add(apple.shape)
         allApple = allApple :+ apple
-      }
-      case "orange" => {
-        val orange = new orange
+      case "orange" =>
+        val orange = new orange()
         orange.shape.centerX = maximumWidth*Math.random
         orange.shape.centerY = maximumHeight*Math.random
         objects.children.add(orange.shape)
         allOrange = allOrange :+ orange
-      }
-      case "banana" => {
-        val banana = new banana
+      case "banana" =>
+        val banana = new banana()
         banana.shape.centerX = maximumWidth*Math.random
         banana.shape.centerY = maximumHeight*Math.random
         objects.children.add(banana.shape)
         allBanana = allBanana :+ banana
-      }
       case _ =>
     }
   }
 
   var h1 = new Humans
   createPlayers(h1)
+
+  def collide(circle1: Circle, circle2: Circle): Boolean = {
+    var xdistance = circle1.centerX.value - circle2.centerX.value
+    var ydistance = circle1.centerY.value - circle2.centerY.value
+    var sumradius = Math.sqrt(xdistance*xdistance + ydistance*ydistance)
+    sumradius < circle1.radius.value+circle2.radius.value
+  }
 
   def keyPress(event: KeyEvent): Unit = {
     event.getCode.getName match {
@@ -101,10 +105,39 @@ object gui extends JFXApp {
         val dt: Double = (time - lastUpdateTime) / 1000000000.0
         lastUpdateTime = time
 
-        if(leftKeyHeld) h1.shape.translateX.value -= h1.speed*0.1
-        if(rightKeyHeld) h1.shape.translateX.value += h1.speed*0.1
-        if(upKeyHeld) h1.shape.translateY.value -= h1.speed*0.1
-        if(downKeyHeld) h1.shape.translateY.value += h1.speed*0.1
+        for(a<- allApple){
+          if(collide(h1.shape,a.shape)){
+          //  remF(allApple.,allApple.indexOf(a))
+            allApple.remove(allApple.indexOf(a))
+          //  h1.consumeObject(a)
+            a.shape.disable
+            a.shape.visible = false
+          }
+        }
+
+        for(b<- allBanana){
+          if(collide(h1.shape,b.shape)){
+            //  h1.consumeObject(a)
+            allBanana.remove(allBanana.indexOf(b))
+            b.shape.disable
+            b.shape.visible = false
+          }
+        }
+
+        for(o<- allOrange){
+          if(collide(h1.shape,o.shape)){
+            allOrange.remove(allOrange.indexOf(o))
+            //  h1.consumeObject(a)
+            o.shape.disable() = true
+            o.shape.visible() = false
+          }
+        }
+
+
+       if(leftKeyHeld) h1.shape.centerX.value -= h1.speed*0.1
+        if(rightKeyHeld) h1.shape.centerX.value += h1.speed*0.1
+        if(upKeyHeld) h1.shape.centerY.value -= h1.speed*0.1
+        if(downKeyHeld) h1.shape.centerY.value += h1.speed*0.1
 
         timeSpawn -= dt
         if (timeSpawn < 0) {

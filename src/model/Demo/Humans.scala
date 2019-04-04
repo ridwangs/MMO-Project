@@ -11,7 +11,6 @@ class Humans extends Animate_Objects (100, 100.0, 10, 5){
     fill = Color.Blue
   }
 
-
   override def consumeObject(consumedObject: Inanimate_Objects): Unit = {
     consumedObject.effect(this)
   }
@@ -19,4 +18,5 @@ class Humans extends Animate_Objects (100, 100.0, 10, 5){
   override def loseHumanHP(attacker: Animate_Objects): Unit = {
     health = health - attacker.strength
   }
+
 }

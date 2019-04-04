@@ -5,11 +5,11 @@ import scalafx.scene.Group
 import scalafx.scene.shape.Circle
 
 class collision {
-  def collide(circle1: Circle, circle2: Circle): Boolean = {
+  /*def collide(circle1: Circle, circle2: Circle): Boolean = {
     var xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
     var ydistance = circle1.centerY.toDouble - circle2.centerY.toDouble
-    var sumradius = Math.pow(xdistance,2) + Math.pow(ydistance,2)
-    if(sumradius < Math.pow(circle1.radius.toDouble + circle2.radius.toDouble,2)){
+    var sumradius = Math.sqrt(Math.pow(xdistance,2) + Math.pow(ydistance,2))
+    if(sumradius < circle1.radius.value+circle2.radius.value){//Math.pow(circle1.radius.toDouble + circle2.radius.toDouble,2)){
       true
     }
     else{
