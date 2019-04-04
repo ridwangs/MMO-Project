@@ -52,13 +52,12 @@ object Background extends JFXApp {
 
   stage = new PrimaryStage {
     title = "Humans VS Zombies"
-   // fullScreen = true
+    fullScreen = true
       scene = new Scene(windowWidth, windowHeight) {
         val bg = new Image("view/bg.jpg")
         val view = new ImageView(bg)
         view.setFitHeight(1200)
         view.setFitWidth(2000)
-
         val human = new Image("view/human.png")
         val h = new ImageView(human)
         h.setFitHeight(characterHeight)
@@ -78,8 +77,8 @@ object Background extends JFXApp {
         }
 
 //
-        h.setTranslateX(windowWidth/2 - h.getX)
-        h.setTranslateY(windowHeight/2 - h.getY)
+//        h.setTranslateX(-h.getX)
+//        h.setTranslateY(-h.getY)
 
 
 
@@ -87,10 +86,12 @@ object Background extends JFXApp {
           val dt: Double = (time - lastUpdateTime) / 1000000000.0
           lastUpdateTime = time
 
-//          h.getTranslateX
-//          h.getTranslateY
-//          x_=(h.getX)
-//          y_=(h.getY)
+          h.getTranslateX
+          h.getTranslateY
+          x_=(h.getX)
+          y_=(h.getY)
+
+
 
 
           for (z <- allZombies) {
