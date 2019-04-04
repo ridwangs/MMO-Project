@@ -21,7 +21,7 @@ object gui extends JFXApp {
   var allBanana: ListBuffer[banana] = ListBuffer()
   var allOrange: ListBuffer[orange] = ListBuffer()
 
-  val maximumWidth = 1980
+  val maximumWidth = 1920
   val maximumHeight = 1020
 
   var leftKeyHeld = false
@@ -40,8 +40,8 @@ object gui extends JFXApp {
     allHumans = allHumans :+ player
   }
   def createComputer(player: Humans): Unit ={
-    player.shape.centerX = maximumWidth*(Math.random())
-    player.shape.centerY = maximumHeight*(Math.random())
+    player.shape.centerX = 0.9*maximumWidth*(Math.random())
+    player.shape.centerY = 0.9*maximumHeight*(Math.random())
     objects.children.add(player.shape)
     allHumans = allHumans :+ player
   }
@@ -130,7 +130,6 @@ object gui extends JFXApp {
 
         for(a<- allApple){
           if(collide(h1.shape,a.shape)){
-          //  remF(allApple.,allApple.indexOf(a))
             allApple.remove(allApple.indexOf(a))
             h1.consumeObject(a)
             a.shape.disable
@@ -165,7 +164,7 @@ object gui extends JFXApp {
         timeSpawn -= dt
         if (timeSpawn < 0) {
           if (allApple.length + allBanana.length + allOrange.length >= 4) {
-            timeSpawn = 7.0
+            timeSpawn = 5.0
           }
           else {
             createFruits(fruits(anyRandom.nextInt(3)))
