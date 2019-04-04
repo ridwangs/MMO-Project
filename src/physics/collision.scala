@@ -3,7 +3,7 @@ package physics
 import scalafx.scene.shape.Circle
 
 class collision {
-  /*def collide(circle1: Circle, circle2: Circle): Boolean = {
+  def collide(circle1: Circle, circle2: Circle): Boolean = {
     var xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
     var ydistance = circle1.centerY.toDouble - circle2.centerY.toDouble
     var sumradius = Math.sqrt(Math.pow(xdistance,2) + Math.pow(ydistance,2))
@@ -23,5 +23,5 @@ class collision {
       circle1.centerX = circle2.centerX.toDouble + sumradius * (xdistance/length)
       circle1.centerY = circle2.centerY.toDouble + sumradius * (ydistance/length)
     }
-  }*/
+  }
 }

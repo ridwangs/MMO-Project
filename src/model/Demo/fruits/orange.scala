@@ -17,7 +17,7 @@ class orange extends Inanimate_Objects(5, 1){
   shape.fill = Color.Orange
 
   override def effect(player: Humans): Unit = {
-    player.strength += this.health
+    player.speed += this.health
   }
 
 }
