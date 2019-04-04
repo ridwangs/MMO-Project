@@ -14,12 +14,4 @@ class orange extends Inanimate_Objects(5, 1){
       true
     }
 
-    var shape = new Circle {
-      radius = 12.0
-      fill = Color.Orange
-    }
-
-
-
-
 }
