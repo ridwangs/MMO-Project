@@ -13,7 +13,8 @@ import scalafx.scene.shape.Circle
 import scala.collection.mutable.ListBuffer
 
 object gui extends JFXApp {
-  var anyRandom = scala.util.Random
+  var
+  anyRandom = scala.util.Random
   var allHumans: ListBuffer[Humans] = ListBuffer()
   val fruits: List[String] = List("apple", "banana", "orange")
   var allApple: ListBuffer[apple] = ListBuffer()
