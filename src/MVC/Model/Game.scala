@@ -1,7 +1,7 @@
-package model
+package MVC.Model
 
-import model.fruits.{apple, banana, orange}
-import model.objects.Humans
+import MVC.Model.fruits.{apple, banana, orange}
+import MVC.Model.objects.Humans
 import scalafx.scene.Group
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle

@@ -1,8 +1,8 @@
-package controller
+package MVC.Controller
 
 import javafx.event.EventHandler
 import javafx.scene.input.KeyEvent
-import model.Game
+import MVC.Model.Game
 
 abstract class KeyboardInputs(playerKey: Game) extends EventHandler[KeyEvent] {
   val LEFT: String

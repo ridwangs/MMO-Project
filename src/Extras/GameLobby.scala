@@ -1,6 +1,6 @@
 package Extras
 
-import model.objects.Humans
+import MVC.Model.objects.Humans
 
 import scala.collection.mutable.ListBuffer
 

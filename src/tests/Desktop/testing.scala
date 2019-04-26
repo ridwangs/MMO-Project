@@ -1,8 +1,8 @@
-package tests.desktop
+package tests.Desktop
 
 import Extras.collision
-import model.fruits.{apple, banana, orange}
-import model.objects.Humans
+import MVC.Model.fruits.{apple, banana, orange}
+import MVC.Model.objects.Humans
 import org.scalatest.FunSuite
 
 class testing extends FunSuite {

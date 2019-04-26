@@ -1,6 +1,6 @@
-package model.fruits
+package MVC.Model.fruits
 
-import model.objects.{Humans, Inanimate_Objects}
+import MVC.Model.objects.{Humans, Inanimate_Objects}
 import scalafx.scene.paint.Color
 
 class apple extends Inanimate_Objects(5, 1){

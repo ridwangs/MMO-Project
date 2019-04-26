@@ -1,4 +1,4 @@
-package model.objects
+package MVC.Model.objects
 
 import scalafx.scene.shape.Circle
 
