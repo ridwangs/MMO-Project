@@ -1,6 +1,5 @@
-package model.Demo
+package model.objects
 
-import javafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 
 abstract class Inanimate_Objects(var health: Int, var damage: Int) extends Object {
@@ -16,7 +15,7 @@ abstract class Inanimate_Objects(var health: Int, var damage: Int) extends Objec
   def effect(player: Humans): Unit = {
 
   }
-  var shape = new Circle(){
+  var shape: Circle = new Circle(){
     radius = 10.0
   }
 }

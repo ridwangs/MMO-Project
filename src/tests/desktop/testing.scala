@@ -1,9 +1,9 @@
-package model.testing
-import model.Demo.fruits.{apple, banana, orange}
-import model.Demo.{Animate_Objects, Humans, Inanimate_Objects}
+package tests.desktop
+
+import Extras.collision
+import model.fruits.{apple, banana, orange}
+import model.objects.Humans
 import org.scalatest.FunSuite
-import physics.collision
-import scalafx.scene.shape.Circle
 
 class testing extends FunSuite {
   test(" i am speed") {
@@ -114,7 +114,7 @@ class testing extends FunSuite {
     x.shape.centerY = 5.0
     y.shape.centerX = 5.0
     y.shape.centerY = 5.0
-    assert(collide.collide(x.shape,y.shape) == true)
+    assert(collide.collide(x.shape,y.shape))
   }
   test("collisionFalse"){
     val x: Humans = new Humans

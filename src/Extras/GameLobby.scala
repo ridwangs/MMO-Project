@@ -1,4 +1,6 @@
-package model.Demo
+package Extras
+
+import model.objects.Humans
 
 import scala.collection.mutable.ListBuffer
 
@@ -16,4 +18,9 @@ object GameLobby {
 //    }
 //    whoWins
 //  }
+
+
+
+
+
 }

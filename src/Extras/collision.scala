@@ -1,4 +1,4 @@
-package physics
+package Extras
 
 import scalafx.scene.shape.Circle
 
@@ -7,7 +7,7 @@ class collision {
     var xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
     var ydistance = circle1.centerY.toDouble - circle2.centerY.toDouble
     var sumradius = Math.sqrt(Math.pow(xdistance,2) + Math.pow(ydistance,2))
-    if(sumradius < circle1.radius.value+circle2.radius.value){//Math.pow(circle1.radius.toDouble + circle2.radius.toDouble,2)){
+    if(sumradius < circle1.radius.value+circle2.radius.value){
       true
     }
     else{
