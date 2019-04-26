@@ -10,6 +10,14 @@ var blob;
 var blobs = [];
 var zoom = 1;
 
+function initializeGame(inputUsername) {
+    username = inputUsername;
+
+    var html = "";
+
+    socket.emit("register", username);
+}
+
 
 function setup() {
 
