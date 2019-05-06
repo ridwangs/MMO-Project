@@ -48,7 +48,7 @@ function createHuman(x,y,health, speed, strength){
     };
 }
 
-function createFruit(item, x, y) {
+function createFruit(item, x, y, h) {
     this.value = 5;
     var damage;
     this.radius = 10;

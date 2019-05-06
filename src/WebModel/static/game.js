@@ -1,18 +1,44 @@
 var socket = io.connect({transports: ['websocket']});
 socket.on('gameState', parseGameState);
 
+let updatetime;
+let spawntime;
+let maxWidth = 1500;
+let maxHeigth = 730;
+
 function parseGameState(event) {
      var gameState = JSON.parse(event);
-/*
-     for (){
 
+     for (let h of gameState['humans']){
+         createHuman(h['x'],h['y'],h['health'],h['speed'],h['strength']);
      }
-*/
+
+    for (let a of gameState['apples']){
+        createFruit("Apple",a['x'],a['y'],a['health']);
+    }
+
+    for (let b of gameState['bananas']){
+        createFruit("Banana",b['x'],b['y'],b['health']);
+    }
+
+    for (let o of gameState['oranges']){
+        createFruit("Orange",o['x'],o['y'],o['health']);
+    }
+    updatetime = gameState['updatetime'];
+    spawntime = gameState['spawntime'];
 
 }
 
 
+function createHumans(x,y,health, speed, strength){
+    let h = new createHuman(x,y,health, speed, strength);
+    h.shape("Blue");
+}
 
+function createFruits(t,x,y,health){
+    let f = new createFruit(t,x,y, health);
+    f.show();
+}
 
 
 
@@ -22,8 +48,6 @@ function parseGameState(event) {
 var blob;
 var b;
 
-var blobs = [];
-var zoom = 1;
 var fruits = ["Apple", "Orange", "Banana"];
 var f = [];
 
@@ -37,8 +61,6 @@ function initializeGame(inputUsername) {
 }
 
 function setup() {
-    //   var parsed = JSON.parse(jsonString)
-
     createCanvas(1500, 730);
     b = new createHuman(100,100, 100,5,5);
     blob = new Blob(0, 0, 64);
@@ -46,7 +68,7 @@ function setup() {
         var p = Math.floor(Math.random()*3);
         var x = random(-width/2,width/2);
         var y = random(-height/2,height/2);
-        f[i] = new createFruit(fruits[p], x,y);
+        f[i] = new createFruit(fruits[p], x,y, 5);
     }
 }
 

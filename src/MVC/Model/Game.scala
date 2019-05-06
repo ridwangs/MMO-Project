@@ -21,7 +21,7 @@ class Game (username: String) extends {
   val maximumWidth = 1920
   val maximumHeight = 1020
 
-  var timeSpawn = 7
+  var timeSpawn: Double = 7
   var lastUpdateTime: Long = System.nanoTime()
   var objects: Group = new Group {}
 
