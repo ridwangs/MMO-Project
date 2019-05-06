@@ -12,7 +12,7 @@ import scalafx.scene.image.{Image, ImageView}
 object gui extends JFXApp {
 
 
-  var g = new Game()
+  var g = new Game("r")
   this.stage = new PrimaryStage{
     fullScreen = true
     this.title = "Clash of Titans"
