@@ -36,4 +36,4 @@ def static_files(filename):
     return send_from_directory('static', filename)
 
 if __name__ == "__main__":
-    socket_server.run(app, port=10000)
+    socket_server.run(app, port=8080)

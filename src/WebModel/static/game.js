@@ -10,6 +10,7 @@ var blob;
 var blobs = [];
 var zoom = 1;
 
+
 function initializeGame(inputUsername) {
     username = inputUsername;
 
@@ -19,15 +20,16 @@ function initializeGame(inputUsername) {
 }
 
 
-function setup() {
+function setup(jsonString) {
+    var parsed = JSON.parse(jsonString)
 
     createCanvas(1500, 730);
 
-    blob = new Blob(0, 0, 64);
+    blob = new Blob(), random((-height, height), 32);
     for (var i = 0; i < 200; i++) {
         var x = random(-width,width);
         var y = random(-height,height);
-        blobs[i] = new Blob(x, y, 16);
+        blobs[i] = new Blob(x, y, 6);
     }
 }
 
@@ -42,9 +44,9 @@ function draw() {
 
     for (var i = blobs.length-1; i >=0; i--) {
         blobs[i].show();
-        if (blob.eats(blobs[i])) {
-            blobs.splice(i, 1);
-        }
+    //     if (blob.eats(blobs[i])) {
+    //         blobs.splice(i, 1);
+    //     }
     }
 
     blob.show();

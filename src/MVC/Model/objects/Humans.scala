@@ -4,8 +4,8 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 
 class Humans extends Animate_Objects (100, 100.0, 10, 5){
-  var inventory: List[Inanimate_Objects] = List()
-
+  var xcoord: Double = 0
+  var ycoord: Double = 0
   var shape: Circle = new Circle {
     radius = 24.0
     fill = Color.Blue
