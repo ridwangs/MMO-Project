@@ -161,7 +161,7 @@ class Game(username: String){
       "apples" -> Json.toJson(this.allApple.map({apple => Json.toJson("x" -> apple.shape.centerX.toDouble, "y" -> apple.shape.centerY.toDouble, "health" -> apple.health)})),
       "bananas" -> Json.toJson(this.allBanana.map({banana => Json.toJson("x" -> banana.shape.centerX.toDouble, "y" -> banana.shape.centerY.toDouble, "health" -> banana.health)})),
       "oranges" -> Json.toJson(this.allOrange.map({oranges => Json.toJson("x" -> oranges.shape.centerX.toDouble, "y" -> oranges.shape.centerY.toDouble, "health" -> oranges.health)})),
-      "humans" -> Json.toJson(this.allHumans.map({humans => Json.toJson("x" -> humans.shape.centerX.toDouble, "y" -> humans.shape.centerY.toDouble, "health" -> humans.health)})),
+      "humans" -> Json.toJson(this.allHumans.map({humans => Json.toJson("x" -> humans.shape.centerX.toDouble, "y" -> humans.shape.centerY.toDouble, "health" -> humans.health, "speed" -> humans.speed, "strength" -> humans.strength)})),
       "keymap" -> Json.toJson[Map[String, Boolean]](keyHeld),
       "spawntime" -> Json.toJson[Double](timeSpawn),
       "updatetime" -> Json.toJson[Double](lastUpdateTime)
