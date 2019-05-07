@@ -3,7 +3,7 @@ package MVC.Model.fruits
 import MVC.Model.objects.{Humans, Inanimate_Objects}
 import scalafx.scene.paint.Color
 
-class banana extends Inanimate_Objects(5, 1){
+class banana extends Inanimate_Objects(5){
   override def canConsume: Boolean = {
     true
   }

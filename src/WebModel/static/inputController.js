@@ -2,7 +2,8 @@ var keyStates = {
     "upKeyHeld": false,
     "leftKeyHeld": false,
     "downKeyHeld": false,
-    "rightKeyHeld": false
+    "rightKeyHeld": false,
+    "spaceKeyHeld" : false
 };
 
 function setState(key, toSet){
@@ -21,7 +22,9 @@ function handleEvent(event, toSet){
         setState("downKeyHeld", toSet);
     }else if(event.key === "rightKeyHeld" || event.key === "ArrowRight"){
         setState("rightKeyHeld", toSet);
-    }
+    }else if(event.key === "spaceKeyHeld" || event.keyCode === 32){
+    setState("spaceKeyHeld", toSet);
+}
 }
 
 document.addEventListener("keydown", function (event) {

@@ -4,7 +4,7 @@ socket.on('gameState', parseGameState);
 let bg;
 let jsPlayer;
 let maxWidth;
-let maxHeigth;
+let maxHeight;
 let jsWidth = 1500;
 let jsHeight = 730;
 
@@ -13,7 +13,7 @@ var fruits = ["Apple", "Orange", "Banana"];
 var f = [];
 
 function initializeGame(inputUsername) {
-    username = inputUsername;
+    let username = inputUsername;
     jsPlayer = createHuman(width/2,height/2+100, 100,5,5);
     jsPlayer.shape(document.getElementById("tagColor").value);
     socket.emit("connect", username);
@@ -21,11 +21,11 @@ function initializeGame(inputUsername) {
 
 function parseGameState(event) {
      var gameState = JSON.parse(event);
-     maxHeigth = gameState['height']/2;
+     maxHeight = gameState['height']/2;
      maxWidth = gameState['width']/2;
 
      let scaleX = jsWidth/(2*maxWidth);
-     let scaleY = jsHeight/(2*maxHeigth);
+     let scaleY = jsHeight/(2*maxHeight);
 
      for (let h of gameState['humans']){
          createHuman(h['x']*scaleX,h['y']*scaleY,h['health'],h['speed'],h['strength']);
@@ -69,7 +69,6 @@ function setup() {
 
 function draw() {
     background(bg);
-  //  translate(width/2, height/2);
     for (var i = 1; i <=4; i++) {
         f[i].show();
     }

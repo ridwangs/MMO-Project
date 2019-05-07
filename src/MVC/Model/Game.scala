@@ -5,7 +5,6 @@ import MVC.Model.objects.Humans
 import play.api.libs.json.{JsValue, Json}
 import scalafx.scene.Group
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.Circle
 
 import scala.collection.mutable.ListBuffer
 
@@ -31,20 +30,18 @@ class Game (username: String) extends {
   var downKeyHeld = false
   var spaceKeyHeld = false
 
-  var keyHeld: Map[String, Boolean] = Map("leftkey" -> leftKeyHeld, "rightkey" -> rightKeyHeld, "upkey" -> upKeyHeld, "downkey" -> downKeyHeld, "spacekey" -> spaceKeyHeld)
-
-  var h1: Humans = new Humans
+  var keyHeld: Map[String, Boolean] = Map("leftKeyHeld" -> leftKeyHeld, "rightKeyHeld" -> rightKeyHeld, "upKeyHeld" -> upKeyHeld, "downKeyHeld" -> downKeyHeld, "spaceKeyHeld" -> spaceKeyHeld)
 
   def createPlayers(): Humans = {
-    var player: Humans = new Humans
+    val player: Humans = new Humans
     player.shape.centerX = maximumWidth / 2
     player.shape.centerY = maximumHeight / 2
     objects.children.add(player.shape)
     allHumans = allHumans :+ player
-    h1 = player
-    h1
+    player
   }
-
+  var player: Humans = createPlayers()
+  
   def createFruits(x: String): Unit ={
     x match {
       case "apple" =>
@@ -128,19 +125,16 @@ class Game (username: String) extends {
     if(downKeyHeld) human.shape.centerY.value += human.speed*0.25
   }
 
-  var h2 = new Humans
+  val h2 = new Humans
   createComputer(h2)
-  createPlayers()
-  
-  
   
   val update: Long => Unit = (time: Long) => {
     val dt: Double = (time - lastUpdateTime) / 1000000000.0
     lastUpdateTime = time
     
-    checkCollision(h1)
-    move(h1)
-    consumeFruit(h1)
+    checkCollision(player)
+    move(player)
+    consumeFruit(player)
 
     timeSpawn -= dt
     if (timeSpawn < 0) {
@@ -155,7 +149,7 @@ class Game (username: String) extends {
   }
   
   def sendJSON(): String ={
-    var gamestate: Map[String, JsValue] = Map(
+    val gamestate: Map[String, JsValue] = Map(
       "height" -> Json.toJson[Int](maximumHeight),
       "apples" -> Json.toJson(this.allApple.map({apple => Json.toJson("x" -> apple.shape.centerX.toDouble, "y" -> apple.shape.centerY.toDouble, "health" -> apple.health)})),
       "bananas" -> Json.toJson(this.allBanana.map({banana => Json.toJson("x" -> banana.shape.centerX.toDouble, "y" -> banana.shape.centerY.toDouble, "health" -> banana.health)})),

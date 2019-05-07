@@ -2,9 +2,7 @@ package MVC.Model.objects
 
 import scalafx.scene.shape.Circle
 
-abstract class Inanimate_Objects(var health: Int, var damage: Int) extends Object {
-  var xcoord: Double = 0
-  var ycoord: Double = 0
+abstract class Inanimate_Objects(var health: Int) extends Object {
   def weight(): Int = {
     0
   }
