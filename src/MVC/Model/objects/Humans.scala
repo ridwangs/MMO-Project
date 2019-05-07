@@ -3,7 +3,7 @@ package MVC.Model.objects
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 
-class Humans extends Animate_Objects (100, 100.0, 10, 5){
+class Humans extends Animate_Objects (100, 10, 5){
   var xcoord: Double = 0
   var ycoord: Double = 0
 
