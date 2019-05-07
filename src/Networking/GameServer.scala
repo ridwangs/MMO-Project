@@ -27,7 +27,7 @@ class GameServer(gameActor: ActorRef) extends Actor{
       this.clients - sender()
     case messageReceived: Received =>
       username = (Json.parse(messageReceived.data.utf8String) \"username").as[String]
-      val childActor: ActorRef = context.actorOf(Props(classOf[GameActor], username))
+      val childActor: ActorRef = context.actorOf(Props(classOf[GameActor]))
       action = (Json.parse(messageReceived.data.utf8String) \ "action").as[String]
       action match{
         case "connect" =>
