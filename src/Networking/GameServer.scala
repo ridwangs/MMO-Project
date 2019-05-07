@@ -6,6 +6,7 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.io.UdpConnected.Disconnected
 import akka.io.{IO, Tcp}
 import akka.util.ByteString
+import play.api.libs.json.Json
 
 class GameServer(gameActor: ActorRef) extends Actor{
   import Tcp._
@@ -25,11 +26,12 @@ class GameServer(gameActor: ActorRef) extends Actor{
     case closed: Disconnected =>
       this.clients - sender()
     case messageReceived: Received =>
-      var username: String = messageReceived.data.utf8String
+      username = (Json.parse(messageReceived.data.utf8String) \"username").as[String]
       val childActor: ActorRef = context.actorOf(Props(classOf[GameActor], username))
+      action = (Json.parse(messageReceived.data.utf8String) \ "action").as[String]
       action match{
-        case "spawn" =>
-          childActor ! spawn
+        case "connect" =>
+          childActor ! spawn(username)
         case "update" =>
           childActor ! update
         case "sendGameState" =>
@@ -51,7 +53,7 @@ object GameServer {
 
     import scala.concurrent.duration._
 
-    val gameActor = actorSystem.actorOf(Props(classOf[GameActor], "yjgfj"))
+    val gameActor = actorSystem.actorOf(Props(classOf[GameActor]))
     val server = actorSystem.actorOf(Props(classOf[GameServer], gameActor))
 
     actorSystem.scheduler.schedule(16.milliseconds, 32.milliseconds, gameActor, update)
