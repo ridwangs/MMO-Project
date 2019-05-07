@@ -16,7 +16,7 @@ class GameActor extends Actor{
   var game: Game = new Game
   override def receive: Receive = {
     case update => game.update(System.nanoTime())
-    case spawn: spawn => spawn(spawn.username)
+    case spawn: spawn => game.createPlayers(spawn.username)
     case sendGameState => sender() ! GameState(game.sendJSON())
   }
 }
