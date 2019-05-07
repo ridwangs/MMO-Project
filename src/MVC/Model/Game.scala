@@ -45,22 +45,6 @@ class Game (username: String) extends {
     h1
   }
 
-  def collide(circle1: Circle, circle2: Circle): Boolean = {
-    val xdistance = circle1.centerX.value - circle2.centerX.value
-    val ydistance = circle1.centerY.value - circle2.centerY.value
-    val sumradius = Math.sqrt(xdistance*xdistance + ydistance*ydistance)
-    sumradius < circle1.radius.value+circle2.radius.value
-  }
-
-  def stayput(circle1: Circle, circle2: Circle): Unit = {
-    val sumradius = circle1.radius.toDouble + circle2.radius.toDouble
-    val xdistance = circle1.centerX.toDouble - circle2.centerX.toDouble
-    val ydistance = circle1.centerY.toDouble - circle2.centerY.toDouble
-    val length = Math.sqrt(Math.pow(xdistance, 2)+ Math.pow(ydistance, 2))
-    circle1.centerX = circle2.centerX.toDouble + sumradius * (xdistance/length)
-    circle1.centerY = circle2.centerY.toDouble + sumradius * (ydistance/length)
-  }
-
   def createFruits(x: String): Unit ={
     x match {
       case "apple" =>
@@ -92,32 +76,35 @@ class Game (username: String) extends {
     objects.children.add(player.shape)
     allHumans = allHumans :+ player
   }
-  def checkCollision(human: Humans): Unit ={
-    if(collide(h1.shape,h2.shape )){
-      stayput(h1.shape, h2.shape)
+  
+  def checkCollision(human: Humans): Unit = {
+    if (human.collide(h2)) {
+      human.stayput(h2)
     }
 
-    if(collide(h1.shape,h2.shape ) && spaceKeyHeld){
+    if (human.collide(h2) && spaceKeyHeld) {
       val c = List(Color.Red, Color.Green, Color.Purple)
-      h1.shape.fill = c(anyRandom.nextInt(3))
-      if(h1.health < 0){
-        h1.shape.disable() = true
-        h1.shape.visible() = false
+      human.shape.fill = c(anyRandom.nextInt(3))
+      if (human.health < 0) {
+        human.shape.disable() = true
+        human.shape.visible() = false
       }
     }
-
+  }
+  
+  def consumeFruit(human: Humans){
     for(a<- allApple){
-      if(collide(h1.shape,a.shape)){
+      if(human.collide(a)){
         allApple.remove(allApple.indexOf(a))
-        h1.consumeObject(a)
+        human.consumeObject(a)
         a.shape.disable() = true
         a.shape.visible() = false
       }
     }
 
     for(b<- allBanana){
-      if(collide(h1.shape,b.shape)){
-        h1.consumeObject(b)
+      if(human.collide(b)){
+        human.consumeObject(b)
         allBanana.remove(allBanana.indexOf(b))
         b.shape.disable() = true
         b.shape.visible() = false
@@ -125,36 +112,36 @@ class Game (username: String) extends {
     }
 
     for(o<- allOrange){
-      if(collide(h1.shape,o.shape)){
+      if(human.collide(o)){
         allOrange.remove(allOrange.indexOf(o))
-        h1.consumeObject(o)
+        human.consumeObject(o)
         o.shape.disable() = true
         o.shape.visible() = false
       }
     }
   }
 
-
-  def move(p: Humans): Unit ={
-    if(leftKeyHeld) h1.shape.centerX.value -= h1.speed*0.25
-    if(rightKeyHeld) h1.shape.centerX.value += h1.speed*0.25
-    if(upKeyHeld) h1.shape.centerY.value -= h1.speed*0.25
-    if(downKeyHeld) h1.shape.centerY.value += h1.speed*0.25
+  def move(human: Humans): Unit ={
+    if(leftKeyHeld) human.shape.centerX.value -= human.speed*0.25
+    if(rightKeyHeld) human.shape.centerX.value += human.speed*0.25
+    if(upKeyHeld) human.shape.centerY.value -= human.speed*0.25
+    if(downKeyHeld) human.shape.centerY.value += human.speed*0.25
   }
-  move(h1)
 
   var h2 = new Humans
   createComputer(h2)
-createPlayers()
+  createPlayers()
+  
+  
+  
   val update: Long => Unit = (time: Long) => {
     val dt: Double = (time - lastUpdateTime) / 1000000000.0
     lastUpdateTime = time
-
-
-    checkCollision(h1)
-
-    move(h1)
     
+    checkCollision(h1)
+    move(h1)
+    consumeFruit(h1)
+
     timeSpawn -= dt
     if (timeSpawn < 0) {
       if (allApple.length + allBanana.length + allOrange.length >= 4) {
@@ -166,6 +153,7 @@ createPlayers()
       }
     }
   }
+  
   def sendJSON(): String ={
     var gamestate: Map[String, JsValue] = Map(
       "height" -> Json.toJson[Int](maximumHeight),

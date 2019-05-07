@@ -11,6 +11,32 @@ class Humans extends Animate_Objects (100, 100.0, 10, 5){
     fill = Color.Blue
   }
 
+  def collide(other: Humans): Boolean = {
+
+    val xdistance = this.shape.centerX.value - other.shape.centerX.value
+    val ydistance = this.shape.centerY.value - other.shape.centerY.value
+    val sumradius = Math.sqrt(xdistance*xdistance + ydistance*ydistance)
+    sumradius < this.shape.radius.value+other.shape.radius.value
+  }
+
+  def collide(other: Inanimate_Objects): Boolean = {
+
+    val xdistance = this.shape.centerX.value - other.shape.centerX.value
+    val ydistance = this.shape.centerY.value - other.shape.centerY.value
+    val sumradius = Math.sqrt(xdistance*xdistance + ydistance*ydistance)
+    sumradius < this.shape.radius.value+other.shape.radius.value
+  }
+
+  def stayput(other: Humans): Unit = {
+    val sumradius = this.shape.radius.toDouble + other.shape.radius.toDouble
+    val xdistance = this.shape.centerX.value - other.shape.centerX.value
+    val ydistance = this.shape.centerY.value - other.shape.centerY.value
+    val length = Math.sqrt(Math.pow(xdistance, 2)+ Math.pow(ydistance, 2))
+    this.shape.centerX = other.shape.centerX.toDouble + sumradius * (xdistance/length)
+    this.shape.centerY = other.shape.centerY.toDouble + sumradius * (ydistance/length)
+  }
+  
+  
   override def consumeObject(consumedObject: Inanimate_Objects): Unit = {
     consumedObject.effect(this)
   }
