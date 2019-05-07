@@ -1,38 +1,52 @@
 var socket = io.connect({transports: ['websocket']});
 socket.on('gameState', parseGameState);
 
-let updatetime;
-let spawntime;
-let maxWidth = 1500;
-let maxHeigth = 730;
+let bg;
+let jsPlayer;
+let maxWidth;
+let maxHeigth;
+let jsWidth = 1500;
+let jsHeight = 730;
+
+var b;
+var fruits = ["Apple", "Orange", "Banana"];
+var f = [];
+
+function initializeGame(inputUsername) {
+    username = inputUsername;
+    jsPlayer = createHuman(width/2,height/2+100, 100,5,5);
+    jsPlayer.shape(document.getElementById("tagColor").value);
+    socket.emit("connect", username);
+}
 
 function parseGameState(event) {
      var gameState = JSON.parse(event);
+     maxHeigth = gameState['height']/2;
+     maxWidth = gameState['width']/2;
+
+     let scaleX = jsWidth/(2*maxWidth);
+     let scaleY = jsHeight/(2*maxHeigth);
 
      for (let h of gameState['humans']){
-         createHuman(h['x'],h['y'],h['health'],h['speed'],h['strength']);
+         createHuman(h['x']*scaleX,h['y']*scaleY,h['health'],h['speed'],h['strength']);
      }
 
     for (let a of gameState['apples']){
-        createFruit("Apple",a['x'],a['y'],a['health']);
+        createFruit("Apple",a['x']*scaleX,a['y']*scaleY,a['health']);
     }
 
     for (let b of gameState['bananas']){
-        createFruit("Banana",b['x'],b['y'],b['health']);
+        createFruit("Banana",b['x']*scaleX,b['y']*scaleY,b['health']);
     }
 
     for (let o of gameState['oranges']){
-        createFruit("Orange",o['x'],o['y'],o['health']);
+        createFruit("Orange",o['x']*scaleX,o['y']*scaleY,o['health']);
     }
-    updatetime = gameState['updatetime'];
-    spawntime = gameState['spawntime'];
-
 }
-
 
 function createHumans(x,y,health, speed, strength){
     let h = new createHuman(x,y,health, speed, strength);
-    h.shape("Blue");
+    h.shape("");
 }
 
 function createFruits(t,x,y,health){
@@ -41,48 +55,23 @@ function createFruits(t,x,y,health){
 }
 
 
-
-
-
-
-var blob;
-var b;
-
-var fruits = ["Apple", "Orange", "Banana"];
-var f = [];
-
-
-function initializeGame(inputUsername) {
-    username = inputUsername;
-
-    var html = "";
-
-    socket.emit("register", username);
-}
-
 function setup() {
-    createCanvas(1500, 730);
-    b = new createHuman(100,100, 100,5,5);
-    blob = new Blob(0, 0, 64);
-    for (var i = 0; i < 10; i++) {
+    bg = loadImage('pbg.png');
+    createCanvas(jsWidth, jsHeight);
+    b = new createHuman(jsWidth/2,jsHeight/2, 100,5,5);
+    for (var i = 1; i <=4; i++) {
         var p = Math.floor(Math.random()*3);
-        var x = random(-width/2,width/2);
-        var y = random(-height/2,height/2);
+        var x = Math.random() * jsWidth;
+        var y = Math.random() * jsHeight;
         f[i] = new createFruit(fruits[p], x,y, 5);
     }
 }
 
 function draw() {
-    background(0);
-    translate(width/2, height/2);
-    translate(-b.position.x, -b.position.y);
-    for (var i = f.length-1; i >=0; i--) {
+    background(bg);
+  //  translate(width/2, height/2);
+    for (var i = 1; i <=4; i++) {
         f[i].show();
     }
-    b.shape("Blue");
-    blob.show();
-
-
-
-
+    b.shape("");
 }

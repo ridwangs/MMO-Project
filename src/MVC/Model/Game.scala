@@ -30,6 +30,7 @@ class Game (username: String) extends {
   var upKeyHeld = false
   var downKeyHeld = false
   var spaceKeyHeld = false
+
   var keyHeld: Map[String, Boolean] = Map("leftkey" -> leftKeyHeld, "rightkey" -> rightKeyHeld, "upkey" -> upKeyHeld, "downkey" -> downKeyHeld, "spacekey" -> spaceKeyHeld)
 
   var h1: Humans = new Humans
@@ -91,14 +92,7 @@ class Game (username: String) extends {
     objects.children.add(player.shape)
     allHumans = allHumans :+ player
   }
-
-  var h2 = new Humans
-  createComputer(h2)
-createPlayers()
-  val update: Long => Unit = (time: Long) => {
-    val dt: Double = (time - lastUpdateTime) / 1000000000.0
-    lastUpdateTime = time
-
+  def checkCollision(human: Humans): Unit ={
     if(collide(h1.shape,h2.shape )){
       stayput(h1.shape, h2.shape)
     }
@@ -138,16 +132,28 @@ createPlayers()
         o.shape.visible() = false
       }
     }
+  }
 
-//    if(leftKeyHeld) spawnplayer.shape.centerX.value -= spawnplayer.speed*0.25
-//    if(rightKeyHeld) spawnplayer.shape.centerX.value += spawnplayer.speed*0.25
-//    if(upKeyHeld) spawnplayer.shape.centerY.value -= spawnplayer.speed*0.25
-//    if(downKeyHeld) spawnplayer.shape.centerY.value += spawnplayer.speed*0.25
 
+  def move(p: Humans): Unit ={
     if(leftKeyHeld) h1.shape.centerX.value -= h1.speed*0.25
     if(rightKeyHeld) h1.shape.centerX.value += h1.speed*0.25
     if(upKeyHeld) h1.shape.centerY.value -= h1.speed*0.25
     if(downKeyHeld) h1.shape.centerY.value += h1.speed*0.25
+  }
+  move(h1)
+
+  var h2 = new Humans
+  createComputer(h2)
+createPlayers()
+  val update: Long => Unit = (time: Long) => {
+    val dt: Double = (time - lastUpdateTime) / 1000000000.0
+    lastUpdateTime = time
+
+
+    checkCollision(h1)
+
+    move(h1)
     
     timeSpawn -= dt
     if (timeSpawn < 0) {

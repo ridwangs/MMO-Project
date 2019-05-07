@@ -1,8 +1,8 @@
 var keyStates = {
-    "w": false,
-    "a": false,
-    "s": false,
-    "d": false
+    "upKeyHeld": false,
+    "leftKeyHeld": false,
+    "downKeyHeld": false,
+    "rightKeyHeld": false
 };
 
 function setState(key, toSet){
@@ -13,14 +13,14 @@ function setState(key, toSet){
 }
 
 function handleEvent(event, toSet){
-    if(event.key === "w" || event.key === "ArrowUp"){
-        setState("w", toSet);
-    }else if(event.key === "a" || event.key === "ArrowLeft"){
-        setState("a", toSet);
-    }else if(event.key === "s" || event.key === "ArrowDown"){
-        setState("s", toSet);
-    }else if(event.key === "d" || event.key === "ArrowRight"){
-        setState("d", toSet);
+    if(event.key === "upKeyHeld" || event.key === "ArrowUp"){
+        setState("upKeyHeld", toSet);
+    }else if(event.key === "leftKeyHeld" || event.key === "ArrowLeft"){
+        setState("leftKeyHeld", toSet);
+    }else if(event.key === "downKeyHeld" || event.key === "ArrowDown"){
+        setState("downKeyHeld", toSet);
+    }else if(event.key === "rightKeyHeld" || event.key === "ArrowRight"){
+        setState("rightKeyHeld", toSet);
     }
 }
 
