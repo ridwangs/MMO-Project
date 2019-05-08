@@ -19,7 +19,7 @@ function initializeGame(inputUsername) {
     console.log(username);
     // jsPlayer = createHuman(width/2,height/2+100, 100,5,5);
     // jsPlayer.shape(document.getElementById("tagColor").value);
-    socket.emit("connect", username);
+    socket.emit("reg", username);
 }
 
 function parseGameState(event) {
