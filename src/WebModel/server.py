@@ -13,11 +13,13 @@ eventlet.monkey_patch()
 
 app = Flask(__name__)
 socket_server = SocketIO(app)
+# ** Connect to Scala TCP socket server **
 
 scala_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 scala_socket.connect(('localhost', 8000))
 
 delimiter = "~"
+
 
 def listen_to_scala(the_socket):
     buffer = ""
@@ -28,26 +30,35 @@ def listen_to_scala(the_socket):
             buffer = buffer[buffer.find(delimiter) + 1:]
             get_from_scala(message)
 
+Thread(target=listen_to_scala, args=(scala_socket,)).start()
+
 def get_from_scala(data):
-    socket_server.emit('gamestate', data, broadcast=True)
+    message = json.loads(data)
+    username = message["username"]
+    user_socket = usernameToSid.get(username, None)
+    if user_socket:
+        socket_server.emit('message', data, broadcast=True)
+
 
 def send_to_scala(data):
     scala_socket.sendall((json.dumps(data) + delimiter).encode())
 
 
-Thread(target=listen_to_scala, args=(scala_socket,)).start()
+
+
+
+
 
 sidToUsername = {}
-usernametoSid = {}
-
-
+usernameToSid = {}
 
 @socket_server.on('connect')
-def got_message(username):
-    sidToUsername[request.sid] = username
-    usernametoSid[username] = request.sid
-    print(username + " connected")
+def got_message():
+    # usernameToSid[username] = request.sid
+    # sidToUsername[request.sid] = username
+    print(request.sid + " connected")
     message = {"username": request.sid, "action": "spawn"}
+    send_to_scala(message)
 
 
 
@@ -56,14 +67,17 @@ def disconnect():
     if request.sid in sidToUsername:
         username = sidToUsername[request.sid]
         del sidToUsername[request.sid]
-        del usernametoSid[username]
+        del usernameToSid[username]
         print(username + " disconnected")
         message = {"username": username, "action": "disconnected"}
+        send_to_scala(message)
+
 
 @socket_server.on('keyStates')
 def key_state(jsonKeyStates):
     print("moving")
     message = {"username": request.sid, "action": "move", "key_states": jsonKeyStates}
+    send_to_scala(message)
 
 @app.route('/')
 def index():

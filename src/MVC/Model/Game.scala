@@ -34,14 +34,15 @@ class Game extends {
 //  var keyHeld: Map[String, Boolean] = Map("leftkey" -> leftKeyHeld, "rightkey" -> rightKeyHeld, "upkey" -> upKeyHeld, "downkey" -> downKeyHeld, "spacekey" -> spaceKeyHeld)
 
 
-  def createPlayers(username: String): Humans = {
+  def createPlayers(username: String): Unit = {
     var player: Humans = new Humans
     player.shape.centerX = maximumWidth / 2
     player.shape.centerY = maximumHeight / 2
     objects.children.add(player.shape)
     allHumans = allHumans + (username -> player)
-    player
+ //   player
   }
+createPlayers("r")
 
   def createFruits(x: String): Unit = {
     x match {
@@ -146,7 +147,6 @@ class Game extends {
 //  createComputer(h2)
 //  createPlayers()
 
-
   val update: Long => Unit = (time: Long) => {
     val dt: Double = (time - lastUpdateTime) / 1000000000.0
     lastUpdateTime = time
@@ -172,7 +172,13 @@ class Game extends {
       "apples" -> Json.toJson(this.allApple.map({ apple => Json.toJson("x" -> apple.shape.centerX.toDouble, "y" -> apple.shape.centerY.toDouble, "health" -> apple.health) })),
       "bananas" -> Json.toJson(this.allBanana.map({ banana => Json.toJson("x" -> banana.shape.centerX.toDouble, "y" -> banana.shape.centerY.toDouble, "health" -> banana.health) })),
       "oranges" -> Json.toJson(this.allOrange.map({ oranges => Json.toJson("x" -> oranges.shape.centerX.toDouble, "y" -> oranges.shape.centerY.toDouble, "health" -> oranges.health) })),
-      "humans" -> Json.toJson(this.allHumans.map({ case (username, player) => Json.toJson("name" -> username, "x" -> player.shape.centerX.toDouble, "y" -> player.shape.centerY.toDouble, "health" -> player.health, "speed" -> player.speed, "strength" -> player.strength) })),
+      "humans" -> Json.toJson(this.allHumans.map({ case (username, player) => Json.toJson(Map(
+        "name" -> Json.toJson(username),
+        "x" -> Json.toJson(player.shape.centerX.toDouble),
+        "y" -> Json.toJson(player.shape.centerY.toDouble),
+        "health" -> Json.toJson(player.health),
+        "speed" -> Json.toJson(player.speed),
+        "strength" -> Json.toJson(player.strength))) })),
       //"keymap" -> Json.toJson[Map[String, Boolean]](keyHeld),
 //      "spawntime" -> Json.toJson[Double](timeSpawn),
 //      "updatetime" -> Json.toJson[Double](lastUpdateTime),
