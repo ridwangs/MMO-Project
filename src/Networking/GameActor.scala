@@ -7,6 +7,7 @@ import akka.actor.Actor
 case object UpdateGame
 
 case class spawn(username: String)
+case class move(username: String, keyMap: Map[String, Boolean])
 
 class GameActor extends Actor{
   var game: Game = new Game()
@@ -19,7 +20,8 @@ class GameActor extends Actor{
     case spawn: spawn =>
       game.createPlayers(spawn.username)
       sender() ! GameState(game.sendJSON())
-
+    case move: move =>
+      game.move(move.username, move.keyMap)
     case SendGameState =>
       sender() ! GameState(game.sendJSON())
   }

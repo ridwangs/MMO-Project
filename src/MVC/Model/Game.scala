@@ -41,7 +41,7 @@ class Game extends {
     objects.children.add(player.shape)
     allHumans = allHumans + (username -> player)
   }
-//createPlayers("r")
+
 
   def createFruits(x: String): Unit = {
     x match {
@@ -133,12 +133,12 @@ class Game extends {
     }
   }
 
-  def move(): Unit = {
-    for (human <- this.allHumans.values){
-    if (human.leftKeyHeld) human.shape.centerX.value -= human.speed * 0.25
-    if (human.rightKeyHeld) human.shape.centerX.value += human.speed * 0.25
-    if (human.upKeyHeld) human.shape.centerY.value -= human.speed * 0.25
-    if (human.downKeyHeld) human.shape.centerY.value += human.speed * 0.25
+  def move(username: String, keymap: Map[String, Boolean]): Unit = {
+    if (allHumans.contains(username)){
+    if (keymap("leftKeyHeld")) allHumans(username).shape.centerX.value -= allHumans(username).speed * 0.25
+    if (keymap("rightKeyHeld")) allHumans(username).shape.centerX.value += allHumans(username).speed * 0.25
+    if (keymap("upKeyHeld")) allHumans(username).shape.centerY.value -= allHumans(username).speed * 0.25
+    if (keymap("downKeyHeld")) allHumans(username).shape.centerY.value += allHumans(username).speed * 0.25
     }
   }
 
@@ -151,7 +151,6 @@ class Game extends {
     lastUpdateTime = time
     createFruits(fruits(anyRandom.nextInt(3)))
     checkCollision()
-    move()
     consumeFruit()
 
     //timeSpawn = dt
@@ -178,8 +177,11 @@ class Game extends {
         "health" -> Json.toJson(player.health),
         "speed" -> Json.toJson(player.speed),
         "strength" -> Json.toJson(player.strength))) })),
-      "height" -> Json.toJson(maximumHeight),
-      "width" -> Json.toJson(maximumWidth)
+      //"keymap" -> Json.toJson[Map[String, Boolean]](keyHeld),
+//      "spawntime" -> Json.toJson[Double](timeSpawn),
+//      "updatetime" -> Json.toJson[Double](lastUpdateTime),
+      "height" -> Json.toJson[Double](maximumHeight),
+      "width" -> Json.toJson[Double](maximumWidth)
     )
     Json.stringify(Json.toJson(gamestate))
   }

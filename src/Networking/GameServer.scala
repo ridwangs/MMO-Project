@@ -61,8 +61,8 @@ class GameServer(gameActor: ActorRef) extends Actor{
       case "spawn" =>
         childactorMap = childactorMap + (username -> gameActor)
         childactorMap (username) ! spawn(username)
-      case _ =>
-
+      case "move" =>
+        childactorMap (username) ! move(username, (message \ "key_States").as[Map[String, Boolean]])
     }
   }
 }
