@@ -11,6 +11,7 @@ context.globalCompositeOperation = 'source-over';
 function initializeGame(inputUsername) {
     socket.emit("register", inputUsername);
     socket.on('gameState', parseGameState);
+    //console.log('Game Initialized');
 }
 
 function parseGameState(event) {
@@ -49,6 +50,7 @@ function parseGameState(event) {
             placeFruits(o['x'] * scaleX, o['y'] * scaleY, '#FFC300');
         }
     }
+    //console.log('Game parsed');
 }
 
 function placeHuman(x, y, color) {
@@ -62,6 +64,8 @@ function placeHuman(x, y, color) {
     context.fill();
     context.strokeStyle = 'black';
     context.stroke();
+    //console.log('Human Placed');
+
 }
 
 function placeFruits(x, y, color) {
@@ -75,4 +79,5 @@ function placeFruits(x, y, color) {
     context.fill();
     context.strokeStyle = 'black';
     context.stroke();
+    //console.log('Fruit Placed');
 }
