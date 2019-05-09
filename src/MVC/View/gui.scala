@@ -1,5 +1,6 @@
 package MVC.View
 
+import MVC.Controller.KeyboardInputs
 import scalafx.scene.{Group, Scene}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
@@ -7,6 +8,7 @@ import scalafx.scene.Scene
 import io.socket.client.{IO, Socket}
 import io.socket.emitter.Emitter
 import javafx.application.Platform
+import javafx.scene.input.KeyEvent
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import play.api.libs.json.{JsValue, Json}
@@ -59,7 +61,7 @@ object gui extends JFXApp {
   val hRad = 24
   val fRad = 10
 
-  var socket: Socket = IO.socket("http://localhost:60000/")
+  var socket: Socket = IO.socket("http://localhost:8080/")
   socket.on("gameState", new HandleMessagesFromPython)
   socket.connect()
   socket.emit("register", "gui1")
@@ -100,6 +102,7 @@ object gui extends JFXApp {
     this.title = "Clash of Titans"
     scene = new Scene(maximumWidth, maximumHeight){
       content = List(sceneGraphics)
+      addEventHandler(KeyEvent.ANY, new KeyboardInputs(socket))
     }
   }
 

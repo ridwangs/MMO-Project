@@ -8,12 +8,12 @@ import io.socket.client.Socket
 import play.api.libs.json.Json
 
 
-abstract class KeyboardInputs(socket: Socket ) extends EventHandler[KeyEvent] {
-  val LEFT: String
-  val RIGHT: String
-  val UP: String
-  val DOWN: String
-  val SPACE: String
+class KeyboardInputs(socket: Socket ) extends EventHandler[KeyEvent] {
+  val LEFT: String = "A"
+  val RIGHT: String = "D"
+  val UP: String = "W"
+  val DOWN: String = "S"
+  val SPACE: String = "Space"
 
   var keys: Map[String, Boolean] = Map(
     "leftKeyHeld" -> false,
