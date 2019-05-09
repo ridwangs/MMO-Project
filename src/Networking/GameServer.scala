@@ -42,7 +42,7 @@ class GameServer(gameActor: ActorRef) extends Actor{
         handleMessageFromWebServer(curr)
       }
 
-    case SendGameState =>  //gameActor ! SendGameState
+    case SendGameState =>
       for((u, a) <- childactorMap){
         a ! SendGameState
       }
@@ -61,9 +61,13 @@ class GameServer(gameActor: ActorRef) extends Actor{
       case "spawn" =>
         childactorMap = childactorMap + (username -> gameActor)
         childactorMap (username) ! spawn(username)
+
       case "move" =>
-        childactorMap (username) ! move(username, (message \ "key_States").as[Map[String, Boolean]])
-        println((message \ "key_States").as[Map[String, Boolean]])
+        childactorMap (username) ! move(username, message("key_states").as[Map[String, Boolean]])
+        println(message("key_states"))
+
+      case "disconnected" =>
+        childactorMap (username) ! RemovePlayer(username)
     }
   }
 }

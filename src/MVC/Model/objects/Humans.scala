@@ -41,8 +41,14 @@ class Humans extends Animate_Objects (100, 10, 5){
     val xdistance = this.shape.centerX.value - other.shape.centerX.value
     val ydistance = this.shape.centerY.value - other.shape.centerY.value
     val length = Math.sqrt(Math.pow(xdistance, 2)+ Math.pow(ydistance, 2))
-    this.shape.centerX = other.shape.centerX.toDouble + sumradius * (xdistance/length)
-    this.shape.centerY = other.shape.centerY.toDouble + sumradius * (ydistance/length)
+    val ox = other.shape.centerX
+    val oy = other.shape.centerY
+    val tx = this.shape.centerX
+    val ty = this.shape.centerY
+    this.shape.centerX = ox.toDouble + sumradius * (xdistance/length)
+    this.shape.centerY = oy.toDouble + sumradius * (ydistance/length)
+//    other.shape.centerX = tx.toDouble + sumradius * (xdistance/length)
+//    other.shape.centerY = ty.toDouble + sumradius * (ydistance/length)
   }
   
   
@@ -50,8 +56,8 @@ class Humans extends Animate_Objects (100, 10, 5){
     consumedObject.effect(this)
   }
 
-  override def loseHumanHP(attacker: Animate_Objects): Unit = {
-    health = health - attacker.strength
+  override def attack(opp: Animate_Objects): Unit = {
+    opp.health -= 150//health - attacker.strength
   }
 
 }

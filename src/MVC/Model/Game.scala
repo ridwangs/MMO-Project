@@ -5,8 +5,6 @@ import MVC.Model.objects.Humans
 import play.api.libs.json.{JsValue, Json}
 import scalafx.scene.Group
 import scalafx.scene.paint.Color
-
-
 import scala.collection.mutable.ListBuffer
 
 class Game extends {
@@ -24,43 +22,34 @@ class Game extends {
   var timeSpawn: Double = 7
   var lastUpdateTime: Long = System.nanoTime()
   var objects: Group = new Group {}
-//
-//  var leftKeyHeld = false
-//  var rightKeyHeld = false
-//  var upKeyHeld = false
-//  var downKeyHeld = false
-//  var spaceKeyHeld = false
-
-//  var keyHeld: Map[String, Boolean] = Map("leftkey" -> leftKeyHeld, "rightkey" -> rightKeyHeld, "upkey" -> upKeyHeld, "downkey" -> downKeyHeld, "spacekey" -> spaceKeyHeld)
-
 
   def createPlayers(username: String): Unit = {
-    var player: Humans = new Humans
-    player.shape.centerX = maximumWidth * Math.random
-    player.shape.centerY = maximumHeight * Math.random
+    val player: Humans = new Humans
+    player.shape.centerX = 0.9 * maximumWidth * Math.random
+    player.shape.centerY = 0.9 * maximumHeight * Math.random
     objects.children.add(player.shape)
     allHumans = allHumans + (username -> player)
+    println(allHumans)
   }
-
 
   def createFruits(x: String): Unit = {
     x match {
       case "apple" =>
         val apple = new apple()
-        apple.shape.centerX = maximumWidth * Math.random
-        apple.shape.centerY = maximumHeight * Math.random
+        apple.shape.centerX = 0.9 * maximumWidth * Math.random
+        apple.shape.centerY = 0.9 * maximumHeight * Math.random
         objects.children.add(apple.shape)
         allApple = allApple :+ apple
       case "orange" =>
         val orange = new orange()
-        orange.shape.centerX = maximumWidth * Math.random
-        orange.shape.centerY = maximumHeight * Math.random
+        orange.shape.centerX = 0.9 * maximumWidth * Math.random
+        orange.shape.centerY = 0.9 * maximumHeight * Math.random
         objects.children.add(orange.shape)
         allOrange = allOrange :+ orange
       case "banana" =>
         val banana = new banana()
-        banana.shape.centerX = maximumWidth * Math.random
-        banana.shape.centerY = maximumHeight * Math.random
+        banana.shape.centerX = 0.9 * maximumWidth * Math.random
+        banana.shape.centerY = 0.9 * maximumHeight * Math.random
         objects.children.add(banana.shape)
         allBanana = allBanana :+ banana
       case _ =>
@@ -74,6 +63,19 @@ class Game extends {
 //    objects.children.add(player.shape)
 //    allHumans = allHumans :+ player
 //  }
+
+  def removeP(username: String): Unit = {
+        allHumans = allHumans - username
+  }
+
+  def checkHealth(): Unit={
+    for ((u,p) <- allHumans) {
+      if (p.health < 0) {
+        removeP(u)
+      }
+    }
+  }
+
   def removeplayer(human1: Humans): Unit = {
   for (human <- this.allHumans.keys){
     if (allHumans(human) == human1){
@@ -85,18 +87,14 @@ class Game extends {
     for (human1 <- this.allHumans.values) {
       for (human2 <- this.allHumans.values) {
         if (human1 != human2){
-        if (human1.collide(human2)) {
-          human1.stayput(human2)
-        }
-        if (human1.collide(human2) && human1.spaceKeyHeld) {
-          val c = List(Color.Red, Color.Green, Color.Purple)
-          human1.shape.fill = c(anyRandom.nextInt(3))
-          if (human1.health < 0) {
-            removeplayer(human1)
-            human1.shape.disable() = true
-            human1.shape.visible() = false
+          if (human1.collide(human2)) {
+            human1.stayput(human2)
+            human1.attack(human2)
           }
-        }
+          if (human1.collide(human2) && human1.spaceKeyHeld) {
+            val c = List(Color.Red, Color.Green, Color.Purple)
+            human1.shape.fill = c(anyRandom.nextInt(3))
+          }
         }
       }
     }
@@ -135,10 +133,10 @@ class Game extends {
 
   def move(username: String, keymap: Map[String, Boolean]): Unit = {
     if (allHumans.contains(username)){
-    if (keymap("leftKeyHeld")) allHumans(username).shape.centerX.value -= allHumans(username).speed * 0.25
-    if (keymap("rightKeyHeld")) allHumans(username).shape.centerX.value += allHumans(username).speed * 0.25
-    if (keymap("upKeyHeld")) allHumans(username).shape.centerY.value -= allHumans(username).speed * 0.25
-    if (keymap("downKeyHeld")) allHumans(username).shape.centerY.value += allHumans(username).speed * 0.25
+    if (keymap("leftKeyHeld")) allHumans(username).shape.centerX.value -= allHumans(username).speed
+    if (keymap("rightKeyHeld")) allHumans(username).shape.centerX.value += allHumans(username).speed
+    if (keymap("upKeyHeld")) allHumans(username).shape.centerY.value -= allHumans(username).speed
+    if (keymap("downKeyHeld")) allHumans(username).shape.centerY.value += allHumans(username).speed
     }
   }
 
@@ -149,12 +147,12 @@ class Game extends {
   val update: Long => Unit = (time: Long) => {
     val dt: Double = (time - lastUpdateTime) / 1000000000.0
     lastUpdateTime = time
-    createFruits(fruits(anyRandom.nextInt(3)))
     checkCollision()
     consumeFruit()
+    checkHealth()
 
-    //timeSpawn = dt
-   /* if (timeSpawn > 0) {
+    timeSpawn -= dt
+    if (timeSpawn < 0) {
       if (allApple.length + allBanana.length + allOrange.length >= 4) {
         timeSpawn = 5.0
       }
@@ -162,24 +160,19 @@ class Game extends {
         createFruits(fruits(anyRandom.nextInt(3)))
         timeSpawn = 5.0
       }
-    }*/
+    }
   }
 
   def sendJSON(): String = {
     var gamestate: Map[String, JsValue] = Map(
-      "apples" -> Json.toJson(this.allApple.map({ apple => Json.toJson("x" -> apple.shape.centerX.toDouble, "y" -> apple.shape.centerY.toDouble, "health" -> apple.health) })),
-      "bananas" -> Json.toJson(this.allBanana.map({ banana => Json.toJson("x" -> banana.shape.centerX.toDouble, "y" -> banana.shape.centerY.toDouble, "health" -> banana.health) })),
-      "oranges" -> Json.toJson(this.allOrange.map({ oranges => Json.toJson("x" -> oranges.shape.centerX.toDouble, "y" -> oranges.shape.centerY.toDouble, "health" -> oranges.health) })),
+      "fruits" -> Json.toJson(Map("sizeA" -> allApple.length, "sizeB" -> allBanana.length, "sizeO" -> allOrange.length)),
+      "apples" -> Json.toJson(allApple.map({ apple => Json.toJson(Map("x" -> apple.shape.centerX.toDouble, "y" -> apple.shape.centerY.toDouble) )})),
+      "bananas" -> Json.toJson(allBanana.map({ banana => Json.toJson(Map("x" -> banana.shape.centerX.toDouble, "y" -> banana.shape.centerY.toDouble)) })),
+      "oranges" -> Json.toJson(allOrange.map({ oranges => Json.toJson(Map("x" -> oranges.shape.centerX.toDouble, "y" -> oranges.shape.centerY.toDouble)) })),
       "humans" -> Json.toJson(this.allHumans.map({ case (username, player) => Json.toJson(Map(
         "name" -> Json.toJson(username),
         "x" -> Json.toJson(player.shape.centerX.toDouble),
-        "y" -> Json.toJson(player.shape.centerY.toDouble),
-        "health" -> Json.toJson(player.health),
-        "speed" -> Json.toJson(player.speed),
-        "strength" -> Json.toJson(player.strength))) })),
-      //"keymap" -> Json.toJson[Map[String, Boolean]](keyHeld),
-//      "spawntime" -> Json.toJson[Double](timeSpawn),
-//      "updatetime" -> Json.toJson[Double](lastUpdateTime),
+        "y" -> Json.toJson(player.shape.centerY.toDouble))) })),
       "height" -> Json.toJson[Double](maximumHeight),
       "width" -> Json.toJson[Double](maximumWidth)
     )

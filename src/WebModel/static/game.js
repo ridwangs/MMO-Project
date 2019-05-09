@@ -1,56 +1,57 @@
 var socket = io.connect({transports: ['websocket']});
-
-
-let username;
-let bg;
-let jsPlayer;
+socket.on('gameState', parseGameState);
 
 let jsWidth = 1500;
 let jsHeight = 730;
 
 
-var b;
-var fruits = ["Apple", "Orange", "Banana"];
-var f = [];
-var m = [];
-var i = 0;
-
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 context.globalCompositeOperation = 'source-over';
-canvas.setAttribute("width", jsWidth);
-canvas.setAttribute("height", jsHeight);
 
-
-function initializeGame(inputUsername) {
-    username = inputUsername;
-    console.log(username);
-    socket.emit("register", username);
+function initializeGame(inputUsername, color) {
+    socket.emit("register", inputUsername);
     socket.on('gameState', parseGameState);
 }
 
 function parseGameState(event) {
     const gameState = JSON.parse(event);
+
+    canvas.setAttribute("width", jsWidth);
+    canvas.setAttribute("height", jsHeight);
+
     let maxHeight = gameState['height']/2;
     let maxWidth = gameState['width']/2;
     let scaleX = jsWidth/(2*maxWidth);
     let scaleY = jsHeight/(2*maxHeight);
 
+  //  placeFruits(jsWidth/2,jsHeight/2,'#ff0000');
+
     for (let h of gameState['humans']){
         console.log("please work");
+        console.log(gameState['fruits']);
         placeHuman(h['x']*scaleX,h['y']*scaleY,'#0000FF');
     }
 
-    for (let a of gameState['apples']){
-        placeFruits(a['x']*scaleX,a['y']*scaleY,'#ffff00');
+    if(gameState['fruits']['sizeA'] > 0) {
+        for (let a of gameState['apples']) {
+            console.log(a['x'])
+            placeFruits(a['x'] * scaleX, a['y'] * scaleY, '#ffff00');
+        }
     }
 
-    for (let b of gameState['bananas']){
-        placeFruits(b['x']*scaleX,b['y']*scaleY,'#ff0000');
+    if(gameState['fruits']['sizeB'] > 0) {
+        for (let b of gameState['bananas']) {
+            console.log(b['x'])
+            placeFruits(b['x'] * scaleX, b['y'] * scaleY, '#ff0000');
+        }
     }
 
-    for (let o of gameState['oranges']){
-        placeFruits(o['x']*scaleX,o['y']*scaleY,'#FFC300');
+    if(gameState['fruits']['sizeO'] > 0) {
+        for (let o of gameState['oranges']) {
+            console.log(o['x'])
+            placeFruits(o['x'] * scaleX, o['y'] * scaleY, '#FFC300');
+        }
     }
 }
 

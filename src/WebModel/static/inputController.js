@@ -14,17 +14,17 @@ function setState(key, toSet){
 }
 
 function handleEvent(event, toSet){
-    if(event.key === "upKeyHeld" || event.key === "ArrowUp"){
+    if(event.key === "w" || event.key === "ArrowUp"){
         setState("upKeyHeld", toSet);
-    }else if(event.key === "leftKeyHeld" || event.key === "ArrowLeft"){
+    }else if(event.key === "a" || event.key === "ArrowLeft"){
         setState("leftKeyHeld", toSet);
-    }else if(event.key === "downKeyHeld" || event.key === "ArrowDown"){
+    }else if(event.key === "s" || event.key === "ArrowDown"){
         setState("downKeyHeld", toSet);
-    }else if(event.key === "rightKeyHeld" || event.key === "ArrowRight"){
+    }else if(event.key === "d" || event.key === "ArrowRight"){
         setState("rightKeyHeld", toSet);
-    }else if(event.key === "spaceKeyHeld" || event.keyCode === 32){
-    setState("spaceKeyHeld", toSet);
-}
+    }else if(event.keyCode === 32) {
+        setState("spaceKeyHeld", toSet);
+    }
 }
 
 document.addEventListener("keydown", function (event) {

@@ -49,8 +49,9 @@ def got_message(username):
     usernameToSid[username] = request.sid
     sidToUsername[request.sid] = username
     print(username + " connected")
-    print(request.sid + "connected")
+    print(request.sid + " connected")
     message = {"username": request.sid, "action": "spawn"}
+    print(message)
     send_to_scala(message)
 
 
@@ -70,7 +71,7 @@ def disconnect():
 def key_state(jsonKeyStates):
     print("moving")
     print(jsonKeyStates)
-    message = {"username": request.sid, "action": "move", "key_states": jsonKeyStates}
+    message = {"username": request.sid, "action": "move", "key_states": json.loads(jsonKeyStates)}
     print(message)
     send_to_scala(message)
 
@@ -93,4 +94,4 @@ def static_files(filename):
     return send_from_directory('static', filename)
 
 if __name__ == "__main__":
-    socket_server.run(app, port=8080)
+    socket_server.run(app, port=60000)
