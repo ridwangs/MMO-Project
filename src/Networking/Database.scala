@@ -1,5 +1,0 @@
-package Networking
-
-object Database {
-
-}

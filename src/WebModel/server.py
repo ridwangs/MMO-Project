@@ -13,7 +13,6 @@ eventlet.monkey_patch()
 
 app = Flask(__name__)
 socket_server = SocketIO(app)
-# ** Connect to Scala TCP socket server **
 
 scala_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 scala_socket.connect(('localhost', 8000))
@@ -44,6 +43,7 @@ Thread(target=listen_to_scala, args=(scala_socket,)).start()
 sidToUsername = {}
 usernameToSid = {}
 
+
 @socket_server.on('register')
 def got_message(username):
     usernameToSid[username] = request.sid
@@ -53,7 +53,6 @@ def got_message(username):
     message = {"username": request.sid, "action": "spawn"}
     print(message)
     send_to_scala(message)
-
 
 
 @socket_server.on('disconnect')
@@ -75,6 +74,7 @@ def key_state(jsonKeyStates):
     print(message)
     send_to_scala(message)
 
+
 @app.route('/')
 def index():
     return send_from_directory('static', 'index.html')
@@ -92,6 +92,7 @@ def game():
 @app.route('/<path:filename>')
 def static_files(filename):
     return send_from_directory('static', filename)
+
 
 if __name__ == "__main__":
     socket_server.run(app, port=60000)

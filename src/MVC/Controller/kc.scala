@@ -5,14 +5,17 @@
 //import MVC.Model.Game
 //import MVC.Model.objects.Humans
 //
-//abstract class KeyboardInputs(playerKey: Game) extends EventHandler[KeyEvent] {
+//class KeyboardInputs(playerKey: Game) extends EventHandler[KeyEvent] {
 //  val LEFT: String
 //  val RIGHT: String
 //  val UP: String
 //  val DOWN: String
 //  val SPACE: String
 //
-//  override def handle(event: KeyEvent): Unit = {
+//
+//  val js = Map()
+//
+//  override def handle(event: KeyEvent, value: Boolean): Unit = {
 //    val keyCode = event.getCode
 //
 //    event.getEventType.getName match {
