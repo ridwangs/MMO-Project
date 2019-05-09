@@ -42,10 +42,10 @@ class GameServer(gameActor: ActorRef) extends Actor{
         handleMessageFromWebServer(curr)
       }
 
-    case SendGameState =>  gameActor ! SendGameState
-//      for((u, a) <- childactorMap){
-//        a ! SendGameState
-//      }
+    case SendGameState =>  //gameActor ! SendGameState
+      for((u, a) <- childactorMap){
+        a ! SendGameState
+      }
 
     case gs: GameState =>
       this.clients.foreach((clients: ActorRef) => clients ! Write(ByteString(gs.gameState + delimiter )))
@@ -60,10 +60,8 @@ class GameServer(gameActor: ActorRef) extends Actor{
     messageType match {
       case "spawn" =>
         childactorMap = childactorMap + (username -> gameActor)
-        gameActor ! spawn(username)
+        childactorMap (username) ! spawn(username)
         println("fgfgn")
-      case "disconnected" =>
-        childactorMap (username) ! PoisonPill
 
     }
   }
@@ -80,8 +78,8 @@ object GameServer {
     val gameActor = actorSystem.actorOf(Props(classOf[GameActor]))
     val server = actorSystem.actorOf(Props(classOf[GameServer], gameActor))
 
-    actorSystem.scheduler.schedule(0 milliseconds, 100 milliseconds, gameActor, UpdateGame)
-    actorSystem.scheduler.schedule(0 milliseconds, 100 milliseconds, server, SendGameState)
+    actorSystem.scheduler.schedule(16 milliseconds, 32 milliseconds, gameActor, UpdateGame)
+    actorSystem.scheduler.schedule(32 milliseconds, 32 milliseconds, server, SendGameState)
   }
 
 }

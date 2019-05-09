@@ -34,13 +34,12 @@ class Game extends {
 //  var keyHeld: Map[String, Boolean] = Map("leftkey" -> leftKeyHeld, "rightkey" -> rightKeyHeld, "upkey" -> upKeyHeld, "downkey" -> downKeyHeld, "spacekey" -> spaceKeyHeld)
 
 
-  def createPlayers(username: String): Humans = {
+  def createPlayers(username: String): Unit = {
     var player: Humans = new Humans
-    player.shape.centerX = maximumWidth / 2
-    player.shape.centerY = maximumHeight / 2
+    player.shape.centerX = maximumWidth * Math.random
+    player.shape.centerY = maximumHeight * Math.random
     objects.children.add(player.shape)
     allHumans = allHumans + (username -> player)
-    player
   }
 //createPlayers("r")
 
