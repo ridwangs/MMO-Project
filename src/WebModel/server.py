@@ -30,34 +30,26 @@ def listen_to_scala(the_socket):
             buffer = buffer[buffer.find(delimiter) + 1:]
             get_from_scala(message)
 
-Thread(target=listen_to_scala, args=(scala_socket,)).start()
 
 def get_from_scala(data):
-    message = json.loads(data)
-    username = message["username"]
-    user_socket = usernameToSid.get(username, None)
-    if user_socket:
-        socket_server.emit('message', data, broadcast=True)
+    socket_server.emit('gameState', data, broadcast=True)
 
 
 def send_to_scala(data):
     scala_socket.sendall((json.dumps(data) + delimiter).encode())
 
 
-
-
-
-
+Thread(target=listen_to_scala, args=(scala_socket,)).start()
 
 sidToUsername = {}
 usernameToSid = {}
 
-@socket_server.on('connect')
-def got_message():
-    # usernameToSid[username] = request.sid
-    # sidToUsername[request.sid] = username
-    print(request.sid + " connected")
-    message = {"username": request.sid, "action": "spawn"}
+@socket_server.on('register')
+def got_message(username):
+    usernameToSid[username] = request.sid
+    sidToUsername[request.sid] = username
+    print(username + " connected")
+    message = {"username": username, "action": "spawn"}
     send_to_scala(message)
 
 

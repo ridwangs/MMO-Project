@@ -34,15 +34,15 @@ class Game extends {
 //  var keyHeld: Map[String, Boolean] = Map("leftkey" -> leftKeyHeld, "rightkey" -> rightKeyHeld, "upkey" -> upKeyHeld, "downkey" -> downKeyHeld, "spacekey" -> spaceKeyHeld)
 
 
-  def createPlayers(username: String): Unit = {
+  def createPlayers(username: String): Humans = {
     var player: Humans = new Humans
     player.shape.centerX = maximumWidth / 2
     player.shape.centerY = maximumHeight / 2
     objects.children.add(player.shape)
     allHumans = allHumans + (username -> player)
- //   player
+    player
   }
-createPlayers("r")
+//createPlayers("r")
 
   def createFruits(x: String): Unit = {
     x match {
@@ -179,11 +179,8 @@ createPlayers("r")
         "health" -> Json.toJson(player.health),
         "speed" -> Json.toJson(player.speed),
         "strength" -> Json.toJson(player.strength))) })),
-      //"keymap" -> Json.toJson[Map[String, Boolean]](keyHeld),
-//      "spawntime" -> Json.toJson[Double](timeSpawn),
-//      "updatetime" -> Json.toJson[Double](lastUpdateTime),
-      "height" -> Json.toJson[Double](maximumHeight),
-      "width" -> Json.toJson[Double](maximumWidth)
+      "height" -> Json.toJson(maximumHeight),
+      "width" -> Json.toJson(maximumWidth)
     )
     Json.stringify(Json.toJson(gamestate))
   }

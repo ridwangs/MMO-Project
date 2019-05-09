@@ -2,30 +2,38 @@ package Networking
 
 import java.net.InetSocketAddress
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
-import akka.io.UdpConnected.Disconnected
+import akka.actor.{Actor, ActorRef, ActorSystem, PoisonPill, Props}
 import akka.io.{IO, Tcp}
 import akka.util.ByteString
 import play.api.libs.json.{JsValue, Json}
+
+
+case object SendGameState
+case class GameState(gameState: String)
 
 class GameServer(gameActor: ActorRef) extends Actor{
   import Tcp._
   import context.system
 
   IO(Tcp) ! Bind(self , new InetSocketAddress("localhost", 8000))
+
   var clients: Set[ActorRef] = Set()
   var childactorMap: Map[String, ActorRef] = Map()
   var username: String = ""
   var action: String = ""
   var buffer: String = ""
   val delimiter: String = "~"
+
   override def receive: Receive = {
     case bound: Bound => println("Listening on port:" + bound.localAddress)
-    case connected:Connected =>
-      this.clients + sender()
+
+    case c: Connected =>
+      this.clients = this.clients + sender()
       sender() ! Register(self)
-    case closed: Disconnected =>
-      this.clients - sender()
+
+    case PeerClosed =>
+      this.clients = this.clients - sender()
+
     case r: Received =>
       buffer += r.data.utf8String
       while (buffer.contains(delimiter)) {
@@ -34,10 +42,13 @@ class GameServer(gameActor: ActorRef) extends Actor{
         handleMessageFromWebServer(curr)
       }
 
-    case sendGameState =>
-      gameActor ! sendGameState
+    case SendGameState =>  gameActor ! SendGameState
+//      for((u, a) <- childactorMap){
+//        a ! SendGameState
+//      }
+
     case gs: GameState =>
-      this.clients.foreach((clients: ActorRef) => clients ! Write(ByteString(gs.json + delimiter )))
+      this.clients.foreach((clients: ActorRef) => clients ! Write(ByteString(gs.gameState + delimiter )))
 
   }
 
@@ -47,9 +58,13 @@ class GameServer(gameActor: ActorRef) extends Actor{
     val messageType = (message \ "action").as[String]
 
     messageType match {
-      case "spawn" => gameActor ! spawn(username)
+      case "spawn" =>
+        childactorMap = childactorMap + (username -> gameActor)
+        gameActor ! spawn(username)
         println("fgfgn")
-      case _=>
+      case "disconnected" =>
+        childactorMap (username) ! PoisonPill
+
     }
   }
 }
@@ -65,8 +80,8 @@ object GameServer {
     val gameActor = actorSystem.actorOf(Props(classOf[GameActor]))
     val server = actorSystem.actorOf(Props(classOf[GameServer], gameActor))
 
-    actorSystem.scheduler.schedule(1.milliseconds, 3.milliseconds, gameActor, update)
-    actorSystem.scheduler.schedule(3.milliseconds, 3.milliseconds, server, sendGameState)
+    actorSystem.scheduler.schedule(0 milliseconds, 100 milliseconds, gameActor, UpdateGame)
+    actorSystem.scheduler.schedule(0 milliseconds, 100 milliseconds, server, SendGameState)
   }
 
 }
