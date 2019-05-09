@@ -1,12 +1,6 @@
 var socket = io.connect({transports: ['websocket']});
-
-
-var canvas = document.getElementById("canvas");
-var context = canvas.getContext("2d");
-context.globalCompositeOperation = 'source-over';
-
-
-let gameState
+socket.on('gameState', parseGameState);
+console.log("hi");
 let username;
 let bg;
 let jsPlayer;
