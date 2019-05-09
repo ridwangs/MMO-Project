@@ -61,7 +61,7 @@ class GameServer(gameActor: ActorRef) extends Actor{
       case "spawn" =>
         childactorMap = childactorMap + (username -> gameActor)
         childactorMap (username) ! spawn(username)
-        println("fgfgn")
+      case _ =>
 
     }
   }

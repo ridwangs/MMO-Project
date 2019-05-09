@@ -149,13 +149,13 @@ class Game extends {
   val update: Long => Unit = (time: Long) => {
     val dt: Double = (time - lastUpdateTime) / 1000000000.0
     lastUpdateTime = time
-
+    createFruits(fruits(anyRandom.nextInt(3)))
     checkCollision()
     move()
     consumeFruit()
 
-    timeSpawn -= dt
-    if (timeSpawn < 0) {
+    //timeSpawn = dt
+   /* if (timeSpawn > 0) {
       if (allApple.length + allBanana.length + allOrange.length >= 4) {
         timeSpawn = 5.0
       }
@@ -163,7 +163,7 @@ class Game extends {
         createFruits(fruits(anyRandom.nextInt(3)))
         timeSpawn = 5.0
       }
-    }
+    }*/
   }
 
   def sendJSON(): String = {
