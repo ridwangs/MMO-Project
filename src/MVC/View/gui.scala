@@ -10,9 +10,8 @@ import javafx.application.Platform
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import play.api.libs.json.{JsValue, Json}
-import scalafx.scene.image.{Image, ImageView}
 
-
+import scala.collection.mutable.ListBuffer
 
 class HandleMessagesFromPython() extends Emitter.Listener {
   override def call(objects: Object*): Unit = {
@@ -24,15 +23,12 @@ class HandleMessagesFromPython() extends Emitter.Listener {
       gui.apples = (gameState \ "apples").as[List[Map[String, JsValue]]]
       gui.oranges = (gameState \ "oranges").as[List[Map[String, JsValue]]]
       gui.bananas = (gameState \ "bananas").as[List[Map[String, JsValue]]]
-     gui.sceneGraphics = new Group()
 
       for(a <- gui.humans) {
-        gui.sceneGraphics.children.removeAll()
         gui.createHuman(a("x").as[Double],a("y").as[Double])
       }
 
       for((f,v) <- gui.fruitsList) {
-        gui.sceneGraphics.children.removeAll()
         if ((f == "sizeA") && (v > 0)) {
           for (a <- gui.apples) {
             gui.createFruits(a("x").as[Double], a("y").as[Double], "a")
@@ -40,14 +36,12 @@ class HandleMessagesFromPython() extends Emitter.Listener {
         }
 
         if ((f == "sizeO") && (v > 0)) {
-          gui.sceneGraphics.children.removeAll()
           for (a <- gui.oranges) {
             gui.createFruits(a("x").as[Double], a("y").as[Double], "o")
           }
         }
 
         if ((f == "sizeB") && (v > 0)) {
-          gui.sceneGraphics.children.removeAll()
           for (a <- gui.bananas) {
             gui.createFruits(a("x").as[Double], a("y").as[Double], "b")
           }
@@ -66,10 +60,10 @@ object gui extends JFXApp {
   val fRad = 10
 
   var socket: Socket = IO.socket("http://localhost:60000/")
-  socket.connect()
-
-  socket.emit("register", "gui1")
   socket.on("gameState", new HandleMessagesFromPython)
+  socket.connect()
+  socket.emit("register", "gui1")
+
 
   def createHuman(x: Double, y: Double): Unit ={
     val player: Circle = new Circle {
