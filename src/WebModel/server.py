@@ -49,7 +49,8 @@ def got_message(username):
     usernameToSid[username] = request.sid
     sidToUsername[request.sid] = username
     print(username + " connected")
-    message = {"username": username, "action": "spawn"}
+    print(request.sid + "connected")
+    message = {"username": request.sid, "action": "spawn"}
     send_to_scala(message)
 
 
@@ -61,14 +62,16 @@ def disconnect():
         del sidToUsername[request.sid]
         del usernameToSid[username]
         print(username + " disconnected")
-        message = {"username": username, "action": "disconnected"}
+        message = {"username": request.sid, "action": "disconnected"}
         send_to_scala(message)
 
 
 @socket_server.on('keyStates')
 def key_state(jsonKeyStates):
     print("moving")
+    print(jsonKeyStates)
     message = {"username": request.sid, "action": "move", "key_states": jsonKeyStates}
+    print(message)
     send_to_scala(message)
 
 @app.route('/')
