@@ -103,7 +103,7 @@ object gui extends JFXApp {
       else if (t == "b") fill = Color.Yellow
       else if (t == "o") fill = Color.Orange
     }
-//    scene
+    sceneGraphics.children.removeAll()
     sceneGraphics.children.add(player)
   }
 

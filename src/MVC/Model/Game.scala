@@ -2,9 +2,11 @@ package MVC.Model
 
 import MVC.Model.fruits.{apple, banana, orange}
 import MVC.Model.objects.Humans
+import MVC.View.gui
 import play.api.libs.json.{JsValue, Json}
 import scalafx.scene.Group
 import scalafx.scene.paint.Color
+
 import scala.collection.mutable.ListBuffer
 
 class Game extends {

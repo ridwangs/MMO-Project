@@ -72,6 +72,8 @@ def key_state(jsonKeyStates):
     print(jsonKeyStates)
     message = {"username": request.sid, "action": "move", "key_states": json.loads(jsonKeyStates)}
     print(message)
+    # while True in json.loads(jsonKeyStates).values:
+    #     send_to_scala(message)
     send_to_scala(message)
 
 
@@ -95,4 +97,4 @@ def static_files(filename):
 
 
 if __name__ == "__main__":
-    socket_server.run(app, port=60000)
+    socket_server.run(app, port=8080)
